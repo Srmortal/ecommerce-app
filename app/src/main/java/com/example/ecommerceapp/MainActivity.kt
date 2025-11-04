@@ -1,6 +1,5 @@
 package com.example.ecommerceapp
 
-import Logo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.example.ecommerceapp.presentation.OTP
+import com.example.ecommerceapp.presentation.SignUp
 import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,8 +18,8 @@ class MainActivity : ComponentActivity() {
             EcommerceAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 //                    SignIn(innerPadding)
-//                       SignUp(innerPadding)
-                    OTP(innerPadding)
+                       SignUp(innerPadding)
+//                    OTP(innerPadding)
                 }
             }
         }

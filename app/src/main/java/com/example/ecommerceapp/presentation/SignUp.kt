@@ -1,14 +1,14 @@
 package com.example.ecommerceapp.presentation
 
+import ErrorText
+import InfoText
 import InputField
 import Logo
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,10 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.ecommerceapp.R
 import com.example.ecommerceapp.data.Constants
 
@@ -43,7 +40,6 @@ fun SignUp(innerPadding: PaddingValues) {
     var repeatPassword by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
-            .padding(innerPadding)
             .fillMaxSize()
             .background(
                 brush = Brush.horizontalGradient(
@@ -53,21 +49,23 @@ fun SignUp(innerPadding: PaddingValues) {
                     )
                 )
             )
+            .padding(innerPadding)
+            .padding(Constants.screenPadding)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Logo()
-        Text("Suha", color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.W900)
+        Logo(100.dp, MaterialTheme.colorScheme.secondary)
+        Text("Suha", color = Color.White, style = MaterialTheme.typography.headlineMedium)
         Box(modifier = Modifier.padding(vertical = 20.dp))
         InputField(
-            label = "Email",
+            label = "Email Address",
             text = email,
             onTextChange = { email = it },
             placeholder = "info@example.com",
             icon = R.drawable.at
         )
-
+        ErrorText("Invalid email format. Make sure your address looks like info@example.com")
         InputField(
             label = "Username",
             text = username,
@@ -75,29 +73,29 @@ fun SignUp(innerPadding: PaddingValues) {
             placeholder = "Mohamed Ali",
             icon = R.drawable.profile
         )
-
+        ErrorText("Invalid Username format. Make sure your username have at least 4 characters")
         InputField(
             label = "Password",
             text = password,
             onTextChange = { password = it },
-            placeholder = "Enter Password",
+            placeholder = "******",
             icon = R.drawable.key,
             isPassword = true
         )
-
+        ErrorText("Invalid Password format. Make sure your password have at least 6 characters")
         InputField(
             label = "Repeat Password",
             text = repeatPassword,
             onTextChange = { repeatPassword = it },
-            placeholder = "Re-enter Password",
+            placeholder = "******",
             icon = R.drawable.key,
             isPassword = true
         )
+        ErrorText("Repeat password doesn't match the password field")
         TextButton(
             onClick = {},
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Constants.screenPadding)
                 .padding(vertical = 10.dp),
             shape = RoundedCornerShape(5.dp),
             colors = ButtonColors(
@@ -106,22 +104,11 @@ fun SignUp(innerPadding: PaddingValues) {
                 disabledContainerColor = Color.White,
                 disabledContentColor = Color.Black
             )
-        ) { Text("Sign Up", color = Color.Black) }
-        Row {
-            Text(
-                "Already have an account? ",
-                color = Color.White,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.W300
-            )
-            Text(
-                "Sign In",
-                modifier = Modifier.clickable {},
-                color = Color.White,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.W900,
-                textDecoration = TextDecoration.Underline
-            )
-        }
+        ) { Text("Sign Up", color = Color.Black, style = MaterialTheme.typography.displayMedium) }
+        InfoText(
+            listOf("Already have an account? ", "Login"),
+            listOf("login"),
+            mapOf("login" to { println("Login clicked") })
+        )
     }
 }
