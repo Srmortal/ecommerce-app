@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -83,28 +85,28 @@ fun InputField(
 
 
 @Composable
-fun Logo(size: Dp, color: Color) {
+fun Logo(size: Dp, mainColor: Color, secondColor: Color) {
     Box(
         modifier = Modifier
             .size(size)
             .clip(
                 RoundedCornerShape(
-                    topEnd = 50.dp,
+                    topEnd = size / 2,
                     bottomEnd = 2.dp,
-                    topStart = 50.dp,
-                    bottomStart = 50.dp,
+                    topStart = size / 2,
+                    bottomStart = size / 2,
                 )
             )
-            .background(color = color)
+            .background(color = mainColor)
     ) {
         Text(
             "S",
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .offset(y = 14.dp, x = 10.dp),
-            color = Color(0xFFFDCFA1),
+                .offset(y = size * 1 / 6, x = size * 4 / 35),
+            color = secondColor,
             style = MaterialTheme.typography.headlineMedium,
-            fontSize = 60.sp,
+            fontSize = size.value.sp * 6 / 7,
         )
     }
 }

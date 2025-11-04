@@ -68,7 +68,7 @@ fun VerifyOTP(innerPadding: PaddingValues) {
         Spacer(modifier = Modifier.size(24.dp))
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Logo(100.dp, MaterialTheme.colorScheme.secondary)
+            Logo(70.dp, MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.onSecondary)
             Text(
                 "Suha", color = Color.White, style = MaterialTheme.typography.headlineMedium
             )

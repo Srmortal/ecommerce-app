@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.EcommerceApp" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.EcommerceApp" parent="android:Theme.Material.NoActionBar" >
+        <item name="android:colorBackground">#0D5CD1</item>
+        <item name="android:windowBackground">#0D5CD1</item>
+    </style>
+    <style name="Theme.MySplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#0D5CD1</item>
+        <item name="android:windowBackground">#0D5CD1</item>
+        <item name="android:colorBackground">#0D5CD1</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.MySplashScreen</item>
+    </style>
 </resources>

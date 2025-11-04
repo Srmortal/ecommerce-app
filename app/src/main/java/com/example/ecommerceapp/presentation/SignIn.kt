@@ -58,7 +58,7 @@ fun SignIn(innerPadding: PaddingValues) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Logo(100.dp, MaterialTheme.colorScheme.secondary)
+        Logo(100.dp, MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.onSecondary)
         Text("Suha", color = Color.White, style = MaterialTheme.typography.headlineMedium)
         Box(modifier = Modifier.padding(vertical = 20.dp))
         ErrorText("Incorrect Email Address or Password")

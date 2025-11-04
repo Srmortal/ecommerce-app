@@ -64,7 +64,7 @@ fun OTP(innerPadding: PaddingValues) {
         Spacer(modifier = Modifier.size(24.dp))
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Logo(100.dp, MaterialTheme.colorScheme.secondary)
+            Logo(70.dp, MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.onSecondary)
             Text(
                 "Suha", color = Color.White, style = MaterialTheme.typography.headlineMedium
             )
@@ -113,13 +113,12 @@ fun OTP(innerPadding: PaddingValues) {
             interactionSource = interactionSource,
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.textButtonColors(
-                contentColor = Color.Black, containerColor = MaterialTheme.colorScheme.secondary
+                contentColor = Color.Black, containerColor = MaterialTheme.colorScheme.secondaryContainer
             ),
 
             ) {
-            Text("Send OTP", style = MaterialTheme.typography.displayMedium)
+            Text("Send OTP", style = MaterialTheme.typography.displayMedium, color = MaterialTheme.colorScheme.onSecondaryContainer)
         }
-//        PolicyText()
         InfoText(
             strings = listOf(
                 "By providing my email, I hereby agree the ",
