@@ -7,5 +7,9 @@ val Orange = Color(0xFFFF8400)     // Secondary
 val MidOrange = Color(0xFFFFAF00)   // secondaryContainer
 
 val LightOrange = Color(0xFFFFCE98) // OnSecondary
-val ElectricIndigo = Color(0xFF625AFA)    // Background
-val Amber = Color(0xFFFFA726)             // Error
+val AccentRed = Color(0xFFF6546A)         // Error / Accent
+val ElectricIndigo = Color(0xFF625AFA)
+val LightBackground = Color(0xFFF5F6FF)
+val DarkBackground = Color(0xFF171C2F)
+val LightSurface = Color(0xFFFFFFFF)
+val DarkSurface = Color(0xFF171C2F)

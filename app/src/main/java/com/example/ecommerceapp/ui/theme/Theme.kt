@@ -17,8 +17,13 @@ private val DarkColorScheme = darkColorScheme(
     onSecondary = LightOrange,
     secondaryContainer = MidOrange,
     onSecondaryContainer = Color.Black,
-    error = Amber,
-    background = ElectricIndigo
+    error = AccentRed,
+    background = DarkBackground,
+    onBackground = Color.White,
+    surface = DarkSurface,
+    onSurface = Color.White,
+    surfaceVariant = ElectricIndigo,
+    outline = LightOrange.copy(alpha = 0.5f)
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -27,8 +32,13 @@ private val LightColorScheme = lightColorScheme(
     secondaryContainer = MidOrange,
     onSecondaryContainer = Color.Black,
     onSecondary = LightOrange,
-    error = Amber,
-    background = ElectricIndigo
+    error = AccentRed,
+    background = LightBackground,
+    onBackground = Color(0xFF1F1F2E),
+    surface = LightSurface,
+    onSurface = Color(0xFF1F1F2E),
+    surfaceVariant = LightBackground,
+    outline = RoyalBlue.copy(alpha = 0.2f)
 )
 
 

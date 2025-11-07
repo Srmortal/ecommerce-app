@@ -29,7 +29,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -47,7 +47,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.ecommerceapp.presentation.OTP
+import androidx.compose.foundation.isSystemInDarkTheme
+import com.example.ecommerceapp.presentation.SettingsScreen
 import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 import kotlinx.coroutines.delay
 
@@ -59,40 +60,48 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            EcommerceAppTheme {
-                var showSplash by remember { mutableStateOf(true) }
+            val systemDarkTheme = isSystemInDarkTheme()
+            var isDarkTheme by remember { mutableStateOf(systemDarkTheme) }
+            EcommerceAppTheme(darkTheme = isDarkTheme) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    var showSplash by remember { mutableStateOf(true) }
 
-                AnimatedContent(
-                    targetState = showSplash,
-                    transitionSpec = {
-                        if (targetState) {
-                            // Splash coming in
-                            (slideInHorizontally(
-                                initialOffsetX = { -it },
-                                animationSpec = tween(durationMillis = 800)
-                            ) + fadeIn(animationSpec = tween(800))) togetherWith
-                                    (slideOutHorizontally(
-                                        targetOffsetX = { it },
-                                        animationSpec = tween(durationMillis = 800)
-                                    ) + fadeOut(animationSpec = tween(800)))
+                    AnimatedContent(
+                        targetState = showSplash,
+                        transitionSpec = {
+                            if (targetState) {
+                                // Splash coming in
+                                (slideInHorizontally(
+                                    initialOffsetX = { -it },
+                                    animationSpec = tween(durationMillis = 800)
+                                ) + fadeIn(animationSpec = tween(800))) togetherWith
+                                        (slideOutHorizontally(
+                                            targetOffsetX = { it },
+                                            animationSpec = tween(durationMillis = 800)
+                                        ) + fadeOut(animationSpec = tween(800)))
+                            } else {
+                                (slideInHorizontally(
+                                    initialOffsetX = { it },
+                                    animationSpec = tween(durationMillis = 800)
+                                ) + fadeIn(animationSpec = tween(800))) togetherWith
+                                        (slideOutHorizontally(
+                                            targetOffsetX = { -it },
+                                            animationSpec = tween(durationMillis = 800)
+                                        ) + fadeOut(animationSpec = tween(800)))
+                            }
+                        },
+                        label = "SplashToOtpAnimation"
+                    ) { isSplash ->
+                        if (isSplash) {
+                            AppSplashScreen(onFinished = { showSplash = false })
                         } else {
-                            (slideInHorizontally(
-                                initialOffsetX = { it },
-                                animationSpec = tween(durationMillis = 800)
-                            ) + fadeIn(animationSpec = tween(800))) togetherWith
-                                    (slideOutHorizontally(
-                                        targetOffsetX = { -it },
-                                        animationSpec = tween(durationMillis = 800)
-                                    ) + fadeOut(animationSpec = tween(800)))
-                        }
-                    },
-                    label = "SplashToOtpAnimation"
-                ) { isSplash ->
-                    if (isSplash) {
-                        AppSplashScreen(onFinished = { showSplash = false })
-                    } else {
-                        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                            OTP(innerPadding)
+                            SettingsScreen(
+                                isDarkMode = isDarkTheme,
+                                onDarkModeToggle = { isDarkTheme = it }
+                            )
                         }
                     }
                 }
