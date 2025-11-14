@@ -56,109 +56,13 @@ import com.example.ecommerceapp.ui.theme.BlueLogo1
 
 @Composable
 fun Home(modifier: Modifier = Modifier){
-    val navItems = listOf(
-        NavItem(
-            label = "Home",
-            icon = Icons.Outlined.Home,
-            onClick = {}
-        ),
-        NavItem(
-            label = "Chat",
-            icon = Icons.Outlined.Mms,
-            onClick = {}
-        ),
-        NavItem(
-            label = "Cart",
-            icon = Icons.Outlined.ShoppingCart,
-            onClick = {}
-        ),
-        NavItem(
-            label = "Settings",
-            icon = Icons.Outlined.Settings,
-            onClick = {}
-        ),
-        NavItem(
-            label = "Favourites",
-            icon = Icons.Outlined.Favorite,
-            onClick = {}
-        ),
-    )
+
     Scaffold(
         modifier = modifier,
         topBar = {
-            Row(
-                modifier = Modifier
-                    .background(color = AppBar)
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Logo(
-                    size = 48.dp,
-                    mainColor = BlueLogo1,
-                    secondColor = MaterialTheme.colorScheme.surfaceVariant
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.width(80.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ShoppingBasket,
-                        contentDescription = "Cart",
-                    )
-                    Box(
-                        modifier = Modifier
-                            .border(
-                                width = 2.dp,
-                                color = Color.Gray,
-                                shape = CircleShape
-                            )
-                    ) {
-                        IconButton(
-                            onClick = {
-
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Menu,
-                                contentDescription = "Menu",
-                                tint = Color.Gray,
-                                modifier = Modifier.size(30.dp)
-                            )
-                        }
-                    }
-                }
-            }
         },
         bottomBar = {
-            NavigationBar(
-                modifier = Modifier
-                    .background(color = AppBar)
-                    .fillMaxWidth()
-                    .padding(2.dp),
-                containerColor = AppBar
-            ) {
-                navItems.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        selected = index == 0,
-                        onClick = item.onClick,
-                        icon = {
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = item.label,
-                                tint = Color.White
-                            )
-                        },
-                        label = {
-                            Text(
-                                text = item.label,
-                                color = Color.White
-                            )
-                        }
-                    )
-                }
-            }
+
         }
     ) { innerPadding ->
         HomeScreen(modifier = Modifier.padding(innerPadding))
