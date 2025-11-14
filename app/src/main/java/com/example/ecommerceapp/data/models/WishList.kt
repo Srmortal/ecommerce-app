@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.models
+package com.example.ecommerceapp.data.models
 
 data class WishList(
     val id: String,

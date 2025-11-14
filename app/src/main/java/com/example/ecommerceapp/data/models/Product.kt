@@ -11,6 +11,5 @@ data class Product(
     val rating: Double,
     val stock: Int,
     val thumbnail: String,
-    val discountPercentage: Double,
     val fireId: String
 )

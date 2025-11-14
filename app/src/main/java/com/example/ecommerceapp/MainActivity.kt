@@ -1,6 +1,6 @@
 package com.example.ecommerceapp
 
-import DataStoreRepository
+import AppNavigation
 import Logo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -33,7 +33,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,24 +49,18 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.Scaffold
 import com.example.ecommerceapp.presentation.SettingsScreen
-import com.example.ecommerceapp.presentation.landingpage.LandingPage
-import com.example.ecommerceapp.presentation.splashscreen.AppSplashScreen
-import com.example.ecommerceapp.presentation.splashscreen.SplashScreenViewModel
+import com.example.ecommerceapp.presentation.SignUp
 import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalAnimationApi::class)
 class MainActivity : ComponentActivity() {
-
-    private lateinit var viewModel: SplashScreenViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_EcommerceApp)
         enableEdgeToEdge()
-
-        viewModel = SplashScreenViewModel(DataStoreRepository(applicationContext))
 
         setContent {
             val systemDarkTheme = isSystemInDarkTheme()
@@ -77,18 +70,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val onBoardingCompleted by viewModel.isOnBoardingCompleted()
-                        .collectAsState(initial = false)
                     var showSplash by remember { mutableStateOf(true) }
-                    LaunchedEffect(Unit) {
-                        delay(2000)
-                        showSplash = false
-                    }
+
                     AnimatedContent(
                         targetState = showSplash,
                         transitionSpec = {
                             if (targetState) {
-                                // Splash coming in
                                 (slideInHorizontally(
                                     initialOffsetX = { -it },
                                     animationSpec = tween(durationMillis = 800)
@@ -107,23 +94,13 @@ class MainActivity : ComponentActivity() {
                                             animationSpec = tween(durationMillis = 800)
                                         ) + fadeOut(animationSpec = tween(800)))
                             }
-                        }
+                        },
+                        label = "SplashToOtpAnimation"
                     ) { isSplash ->
                         if (isSplash) {
                             AppSplashScreen(onFinished = { showSplash = false })
                         } else {
-                            if (onBoardingCompleted) {
-                                SettingsScreen(
-                                    isDarkMode = isDarkTheme,
-                                    onDarkModeToggle = { isDarkTheme = it }
-                                )
-                            } else {
-                                LandingPage(onOnboardingFinished = {
-                                    viewModel.saveOnBoardingState(
-                                        true
-                                    )
-                                })
-                            }
+                            AppNavigation()
                         }
                     }
                 }

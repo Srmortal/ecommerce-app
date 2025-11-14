@@ -33,13 +33,23 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
 import com.example.ecommerceapp.data.Constants
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 
 @Composable
-fun SignIn(innerPadding: PaddingValues) {
+fun SignIn(navController: NavController, innerPadding: PaddingValues) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
     var isPressed by remember { mutableStateOf(false) }
+    LocalContext.current
+
+    val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     Column(
         modifier = Modifier
@@ -61,12 +71,17 @@ fun SignIn(innerPadding: PaddingValues) {
         Logo(100.dp, MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.onSecondary)
         Text("Suha", color = Color.White, style = MaterialTheme.typography.headlineMedium)
         Box(modifier = Modifier.padding(vertical = 20.dp))
-        ErrorText("Incorrect Email Address or Password")
+
+        if (errorMessage.isNotEmpty()) {
+            ErrorText(errorMessage)
+        }
+
         InputField(
             label = "Email Address",
             text = email,
             onTextChange = { email = it },
             placeholder = "info@example.com",
+            modifier = Modifier,
             icon = R.drawable.at
         )
         InputField(
@@ -75,23 +90,56 @@ fun SignIn(innerPadding: PaddingValues) {
             onTextChange = { password = it },
             placeholder = "******",
             icon = R.drawable.key,
-            isPassword = true
-        )
-        TextButton(
-            onClick = {},
+            isPassword = true,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 10.dp),
-            shape = RoundedCornerShape(5.dp),
+        )
+
+        TextButton(
+            onClick = {
+                if (email.isBlank() || password.isBlank()) {
+                    errorMessage = "Email and Password cannot be empty"
+                    return@TextButton
+                }
+
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            errorMessage = ""
+                            navController.navigate("home") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        } else {
+                            when (task.exception) {
+                                is FirebaseAuthInvalidUserException ->
+                                    errorMessage = "No account found with this email"
+
+                                is FirebaseAuthInvalidCredentialsException ->
+                                    errorMessage = "Incorrect password"
+
+                                else ->
+                                    errorMessage =
+                                        task.exception?.localizedMessage ?: "Authentication failed"
+                            }
+                        }
+                    }
+            },
             colors = ButtonColors(
                 contentColor = Color.Black,
-                containerColor = MaterialTheme.colorScheme.secondary,
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 disabledContainerColor = Color.White,
                 disabledContentColor = Color.Black
-            )
-        ) { Text("Login", color = Color.Black, style = MaterialTheme.typography.displayMedium) }
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp)
+        ) {
+            Text("Login", color = Color.Black, style = MaterialTheme.typography.displayMedium)
+        }
+
         TextButton(
-            {},
+            {
+//                navController.navigate("home")
+            },
         ) {
             Text(
                 "Forget Password?",
@@ -100,7 +148,6 @@ fun SignIn(innerPadding: PaddingValues) {
                     detectTapGestures(
                         onPress = {
                             isPressed = true
-
                             try {
                                 awaitRelease()
                             } finally {
@@ -114,14 +161,16 @@ fun SignIn(innerPadding: PaddingValues) {
                 textDecoration = TextDecoration.Underline
             )
         }
+
         InfoText(
             strings = listOf(
                 "Don't have an account? ", "Register Now"
             ),
             tags = listOf("register"),
             onTagClick = mapOf(
-                "register" to { println("Register clicked") },
+                "register" to { navController.navigate("signup") },
             )
         )
     }
+
 }
