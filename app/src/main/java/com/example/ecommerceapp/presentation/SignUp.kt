@@ -28,9 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.ecommerceapp.R
+import com.example.ecommerceapp.SignIn
 import com.example.ecommerceapp.data.Constants
+import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 
 @Composable
 fun SignUp(innerPadding: PaddingValues) {
@@ -110,5 +113,13 @@ fun SignUp(innerPadding: PaddingValues) {
             listOf("login"),
             mapOf("login" to { println("Login clicked") })
         )
+    }
+}
+
+@Preview
+@Composable
+fun SignInPreview() {
+    EcommerceAppTheme {
+        SignIn(innerPadding = PaddingValues())
     }
 }

@@ -13,3 +13,7 @@ val LightBackground = Color(0xFFF5F6FF)
 val DarkBackground = Color(0xFF171C2F)
 val LightSurface = Color(0xFFFFFFFF)
 val DarkSurface = Color(0xFF171C2F)
+
+val BlueLogo1 = Color(0xFF100DD1)
+
+val AppBar = Color(0xFF332858)

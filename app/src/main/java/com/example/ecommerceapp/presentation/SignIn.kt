@@ -32,8 +32,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.ecommerceapp.data.Constants
+import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 
 @Composable
 fun SignIn(innerPadding: PaddingValues) {
@@ -123,5 +125,13 @@ fun SignIn(innerPadding: PaddingValues) {
                 "register" to { println("Register clicked") },
             )
         )
+    }
+}
+
+@Preview
+@Composable
+fun SignInPreview(){
+    EcommerceAppTheme {
+        SignIn(innerPadding = PaddingValues())
     }
 }
