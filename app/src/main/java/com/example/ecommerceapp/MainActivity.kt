@@ -1,5 +1,6 @@
 package com.example.ecommerceapp
 
+import DataStoreRepository
 import Logo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -32,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,15 +51,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.isSystemInDarkTheme
 import com.example.ecommerceapp.presentation.SettingsScreen
+import com.example.ecommerceapp.presentation.landingpage.LandingPage
+import com.example.ecommerceapp.presentation.splashscreen.AppSplashScreen
+import com.example.ecommerceapp.presentation.splashscreen.SplashScreenViewModel
 import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalAnimationApi::class)
 class MainActivity : ComponentActivity() {
+
+    private lateinit var viewModel: SplashScreenViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_EcommerceApp)
         enableEdgeToEdge()
+
+        viewModel = SplashScreenViewModel(DataStoreRepository(applicationContext))
 
         setContent {
             val systemDarkTheme = isSystemInDarkTheme()
@@ -67,8 +77,13 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val onBoardingCompleted by viewModel.isOnBoardingCompleted()
+                        .collectAsState(initial = false)
                     var showSplash by remember { mutableStateOf(true) }
-
+                    LaunchedEffect(Unit) {
+                        delay(2000)
+                        showSplash = false
+                    }
                     AnimatedContent(
                         targetState = showSplash,
                         transitionSpec = {
@@ -92,16 +107,23 @@ class MainActivity : ComponentActivity() {
                                             animationSpec = tween(durationMillis = 800)
                                         ) + fadeOut(animationSpec = tween(800)))
                             }
-                        },
-                        label = "SplashToOtpAnimation"
+                        }
                     ) { isSplash ->
                         if (isSplash) {
                             AppSplashScreen(onFinished = { showSplash = false })
                         } else {
-                            SettingsScreen(
-                                isDarkMode = isDarkTheme,
-                                onDarkModeToggle = { isDarkTheme = it }
-                            )
+                            if (onBoardingCompleted) {
+                                SettingsScreen(
+                                    isDarkMode = isDarkTheme,
+                                    onDarkModeToggle = { isDarkTheme = it }
+                                )
+                            } else {
+                                LandingPage(onOnboardingFinished = {
+                                    viewModel.saveOnBoardingState(
+                                        true
+                                    )
+                                })
+                            }
                         }
                     }
                 }
@@ -109,118 +131,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-@Composable
-fun AppSplashScreen(onFinished: () -> Unit) {
-    val scale = remember { Animatable(0f) }
-    val alpha = remember { Animatable(0f) }
-
-    LaunchedEffect(Unit) {
-        alpha.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = 900)
-        )
-        scale.animateTo(
-            targetValue = 1f,
-            animationSpec = spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy,
-                stiffness = Spring.StiffnessLow
-            )
-        )
-        delay(1000)
-        onFinished()
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary)
-            .alpha(alpha.value),
-        contentAlignment = Alignment.Center
-    ) {
-        Logo(
-            size = (200.dp * scale.value),
-            mainColor = MaterialTheme.colorScheme.secondary,
-            secondColor = MaterialTheme.colorScheme.onSecondary
-        )
-        AnimatedRoadWithTruck()
-    }
-
-
-}
-
-@Composable
-fun AnimatedRoadWithTruck() {
-    val offsetX = remember { Animatable(0f) }
-    val roadWidth = remember { Animatable(0f) }
-
-    LaunchedEffect(Unit) {
-        roadWidth.animateTo(
-            targetValue = 300f,
-            animationSpec = tween(
-                durationMillis = 1200,
-                easing = FastOutSlowInEasing
-            )
-        )
-
-        while (true) {
-            offsetX.animateTo(
-                targetValue = -100f,
-                animationSpec = tween(
-                    durationMillis = 300,
-                    easing = LinearEasing
-                )
-            )
-            offsetX.snapTo(0f)
-        }
-    }
-
-    Box(
-        modifier = Modifier
-            .offset(y = 180.dp)
-            .height(50.dp)
-            .width(roadWidth.value.dp),
-        contentAlignment = Alignment.CenterStart
-    ) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .height(30.dp)
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(50))
-                .background(Color(0xFF2C2C2C))
-        ) {
-            Canvas(
-                modifier = Modifier
-                    .matchParentSize()
-                    .graphicsLayer { translationX = offsetX.value }
-            ) {
-                val dashWidth = 30.dp.toPx()
-                val dashHeight = 4.dp.toPx()
-                val spacing = 20.dp.toPx()
-
-                var x = -dashWidth
-                while (x < size.width + dashWidth) {
-                    drawRoundRect(
-                        color = Color.White,
-                        topLeft = Offset(x, size.height / 2 - dashHeight / 2),
-                        size = Size(dashWidth, dashHeight),
-                        cornerRadius = CornerRadius(2.dp.toPx())
-                    )
-                    x += dashWidth + spacing
-                }
-            }
-        }
-
-        Truck()
-    }
-}
-
-@Composable
-fun Truck() {
-    Image(
-        painter = painterResource(R.drawable.truck),
-        contentDescription = "Truck",
-        modifier = Modifier.offset(x = 15.dp, y = (-15).dp)
-    )
-}
-
