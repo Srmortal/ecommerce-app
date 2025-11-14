@@ -25,6 +25,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +42,7 @@ import com.example.ecommerceapp.SignIn
 import com.example.ecommerceapp.data.Constants
 import com.example.ecommerceapp.data.NavItem
 import com.example.ecommerceapp.presentation.Home
+import com.example.ecommerceapp.presentation.SettingsScreen
 import com.example.ecommerceapp.presentation.SignUp
 import com.example.ecommerceapp.ui.theme.AppBar
 import com.example.ecommerceapp.ui.theme.BlueLogo1
@@ -50,16 +55,18 @@ fun AppNavigation() {
     val currentRoute = currentBackStack?.destination?.route
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
+    val systemDarkTheme = isSystemInDarkTheme()
+    var isDarkTheme by remember { mutableStateOf(systemDarkTheme) }
 
     Scaffold(
         topBar = {
-            if (currentRoute == "home") {
+            if (currentRoute == "home" || currentRoute == "settings") {
                 AppBar()
             }
         },
         bottomBar = {
-            if (currentRoute == "home") {
-                BottomBar(navController)
+            if (currentRoute == "home" || currentRoute == "settings") {
+                BottomBar(navController, currentRoute)
             }
         },
     ) { innerPadding ->
@@ -71,18 +78,25 @@ fun AppNavigation() {
             composable("signup") { SignUp(navController, innerPadding) }
             composable("signin") { SignIn(navController, innerPadding) }
             composable("home") { Home() }
+            composable("settings") { 
+                SettingsScreen(
+                    isDarkMode = isDarkTheme,
+                    onDarkModeToggle = { isDarkTheme = it },
+                    navController = navController
+                )
+            }
         }
     }
 }
 
 
 @Composable
-fun BottomBar(navController: NavController) {
+fun BottomBar(navController: NavController, currentRoute: String?) {
     val navItems = listOf(
         NavItem(
             label = "Home",
             icon = Icons.Outlined.Home,
-            onClick = {}
+            onClick = { navController.navigate("home") }
         ),
         NavItem(
             label = "Chat",
@@ -97,7 +111,7 @@ fun BottomBar(navController: NavController) {
         NavItem(
             label = "Settings",
             icon = Icons.Outlined.Settings,
-            onClick = {}
+            onClick = { navController.navigate("settings") }
         ),
         NavItem(
             label = "Favourites",
@@ -105,6 +119,13 @@ fun BottomBar(navController: NavController) {
             onClick = {}
         ),
     )
+    
+    val selectedIndex = when (currentRoute) {
+        "home" -> 0
+        "settings" -> 3
+        else -> 0
+    }
+    
     NavigationBar(
         modifier = Modifier
             .background(color = AppBar)
@@ -114,7 +135,7 @@ fun BottomBar(navController: NavController) {
     ) {
         navItems.forEachIndexed { index, item ->
             NavigationBarItem(
-                selected = index == 0,
+                selected = index == selectedIndex,
                 onClick = item.onClick,
                 icon = {
                     Icon(
