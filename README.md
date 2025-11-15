@@ -22,8 +22,7 @@ An Android e-Commerce application built using Jetpack Compose that enables users
 *   **Key Activities:**
     1.  **Requirement Analysis:** Finalize the feature set for the MVP (Minimum Viable Product) based on the initial idea.
     2.  **Technology Stack Finalization:** Confirm versions for Android SDK, Jetpack Compose, Firebase, Retrofit, etc.
-    3.  **System Architecture Design:** Sketch a high-level architecture diagram showing how the app components (UI, Data) interact with Firebase and the DummyJSON API.
-*   **Deliverables:** Requirement Specification Document, Technology Stack List, System Architecture Diagram.
+*   **Deliverables:** Requirement Specification Document, Technology Stack List.
 
 - **Phase 2: Core Development - Sprints (Weeks 2-4)**
 *   **Objective:** Build the core functionality of the application in iterative sprints.
