@@ -3,7 +3,7 @@
 ---
 
 ## Project Idea  
-An Android e-Commerce application built using Jetpack Compose that enables users to register, log in, browse products, search, add to cart, manage wishlist, and checkout. The backend uses Firebase for auth and SQLite for offline storage; product data is fetched via the DummyJSON API.  
+An Android e-Commerce application built using Jetpack Compose that enables users to register, log in, browse products, search, add to cart, manage wishlist, and checkout. The backend uses Firebase for auth; product data is fetched via the DummyJSON API.  
 
 ---
 
