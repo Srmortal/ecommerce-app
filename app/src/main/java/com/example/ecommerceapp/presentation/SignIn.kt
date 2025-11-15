@@ -34,6 +34,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import android.widget.Toast
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.ecommerceapp.data.Constants
@@ -47,7 +49,7 @@ fun SignIn(navController: NavController, innerPadding: PaddingValues) {
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
     var isPressed by remember { mutableStateOf(false) }
-    LocalContext.current
+    var isLoading by remember { mutableStateOf(false) }
 
     val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -96,11 +98,14 @@ fun SignIn(navController: NavController, innerPadding: PaddingValues) {
 
         TextButton(
             onClick = {
+                if (isLoading) return@TextButton
+
                 if (email.isBlank() || password.isBlank()) {
                     errorMessage = "Email and Password cannot be empty"
                     return@TextButton
                 }
-
+                isLoading = true
+                errorMessage = ""
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
@@ -123,6 +128,7 @@ fun SignIn(navController: NavController, innerPadding: PaddingValues) {
                         }
                     }
             },
+            enabled = !isLoading,
             colors = ButtonColors(
                 contentColor = Color.Black,
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -133,7 +139,15 @@ fun SignIn(navController: NavController, innerPadding: PaddingValues) {
                 .fillMaxWidth()
                 .padding(vertical = 10.dp)
         ) {
-            Text("Login", color = Color.Black, style = MaterialTheme.typography.displayMedium)
+            if (isLoading) {
+                CircularProgressIndicator(
+                    color = Color.Black,
+                    strokeWidth = 2.dp,
+                    modifier = Modifier.size(22.dp)
+                )
+            } else {
+                Text("Login", color = Color.Black, style = MaterialTheme.typography.displayMedium)
+            }
         }
 
         TextButton(

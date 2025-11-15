@@ -27,7 +27,7 @@ fun CartScreen(cart: List<Product>) {
                         .padding(vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(product.name, modifier = Modifier.weight(1f))
+                    Text(product.title, modifier = Modifier.weight(1f))
                     Text(product.price.toString())
                 }
             }

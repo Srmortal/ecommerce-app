@@ -78,7 +78,7 @@ fun AppNavigation() {
             composable("signup") { SignUp(navController, innerPadding) }
             composable("signin") { SignIn(navController, innerPadding) }
             composable("home") { Home() }
-            composable("settings") { 
+            composable("settings") {
                 SettingsScreen(
                     isDarkMode = isDarkTheme,
                     onDarkModeToggle = { isDarkTheme = it },
@@ -119,13 +119,13 @@ fun BottomBar(navController: NavController, currentRoute: String?) {
             onClick = {}
         ),
     )
-    
+
     val selectedIndex = when (currentRoute) {
         "home" -> 0
         "settings" -> 3
         else -> 0
     }
-    
+
     NavigationBar(
         modifier = Modifier
             .background(color = AppBar)
