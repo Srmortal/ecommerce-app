@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.ecommerceapp.data.models.Product
 
+
 @Composable
 fun ProductScreen(
     products: List<Product>,

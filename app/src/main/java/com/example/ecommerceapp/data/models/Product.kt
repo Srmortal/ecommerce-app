@@ -11,5 +11,8 @@ data class Product(
     val rating: Double,
     val stock: Int,
     val thumbnail: String,
-    val fireId: String
+    val fireId: String,
+    val name: String,
+    val image: Int
 )
+

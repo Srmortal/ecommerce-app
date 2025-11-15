@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.ecommerceapp.data.models.Product
 
+
 @Composable
 fun CartScreen(cart: List<Product>) {
     Column(
