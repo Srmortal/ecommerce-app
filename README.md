@@ -21,26 +21,11 @@ An Android e-Commerce application built using Jetpack Compose that enables users
 *   **Objective:** Establish a solid foundation and clear direction for the project.
 *   **Key Activities:**
     1.  **Requirement Analysis:** Finalize the feature set for the MVP (Minimum Viable Product) based on the initial idea.
-    2.  **Technology Stack Finalization:** Confirm versions for Android SDK, Jetpack Compose, Firebase, Retrofit, SQLite, etc.
-    3.  **System Architecture Design:** Sketch a high-level architecture diagram showing how the app components (UI, Data, Domain) interact with Firebase and the DummyJSON API.
-    4.  **Audience Personas:** Develop 2-3 detailed user personas (e.g., "Tech-Savvy Sarah," "Budget-Conscious Bob") to guide design and development decisions.
-    5.  **Define Project Milestones & Timeline:** Create a Gantt chart or a simple timeline in a shared tool (like Trello, Asana, or GitHub Projects).
-*   **Deliverables:** Requirement Specification Document, Technology Stack List, System Architecture Diagram, User Personas, Project Timeline.
+    2.  **Technology Stack Finalization:** Confirm versions for Android SDK, Jetpack Compose, Firebase, Retrofit, etc.
+    3.  **System Architecture Design:** Sketch a high-level architecture diagram showing how the app components (UI, Data) interact with Firebase and the DummyJSON API.
+*   **Deliverables:** Requirement Specification Document, Technology Stack List, System Architecture Diagram.
 
-- **Phase 2: Design & Prototyping (Week 2)**
-*   **Objective:** Create a visual identity and interactive prototype for the application.
-*   **Key Activities:**
-    1.  **Visual Identity:**
-        *   **Logo Design:** Create and finalize the app logo in various resolutions.
-        *   **Color Palette & Typography:** Define a consistent color scheme and font families.
-    2.  **UI/UX Design:**
-        *   Create wireframes for all assigned screens (Landing, Login, Sign Up, Home, etc.).
-        *   Develop high-fidelity mockups in a tool like Figma or Adobe XD, incorporating the visual identity.
-    3.  **Prototype:** Build an interactive prototype in the design tool to simulate user flows (e.g., login -> home -> product -> add to cart).
-    4.  **Main Poster Design:** Create the promotional poster for the project presentation.
-*   **Deliverables:** Style Guide, High-Fidelity Figma Mockups, Interactive Prototype, Finalized App Logo, Project Poster.
-
-- **Phase 3: Core Development - Sprints (Weeks 3-7)**
+- **Phase 2: Core Development - Sprints (Weeks 2-4)**
 *   **Objective:** Build the core functionality of the application in iterative sprints.
 *   **Key Activities (divided by modules):**
     *   **Sprint 1: Foundation & Authentication**
@@ -49,11 +34,10 @@ An Android e-Commerce application built using Jetpack Compose that enables users
         *   Integrate **Firebase Authentication**.
     *   **Sprint 2: Product Discovery & Data Layer**
         *   Set up **Retrofit** for networking with the DummyJSON API (Yousseff Mohamed).
-        *   Implement the **Home Screen** with product listing (Yousseff Mohamed).
-        *   Implement the **Search Screen** with filtering (Yousseff Mohamed).
+        *   Implement the **Home Screen** with category listing and search bar for searching for products (Yousseff Mohamed).
     *   **Sprint 3: Product Details & User Engagement**
         *   Implement the **Product Detail Screen** (Yousseff Alaa).
-        *   Develop the core logic for **Wishlist** (local storage/SQLite) (Essam, Yousseff Alaa).
+        *   Develop the core logic for **Wishlist** (Essam).
         *   Develop the core logic for **Shopping Cart** (Yousseff Alaa).
     *   **Sprint 4: User Profile & Settings**
         *   Implement the **Profile Screen** with editing capabilities (Krolos).
@@ -65,20 +49,19 @@ An Android e-Commerce application built using Jetpack Compose that enables users
         *   Perform initial module integration and bug fixing.
 *   **Deliverables:** A functional, feature-complete application after each sprint, with code merged into the main branch on GitHub.
 
-- **Phase 4: Testing, Debugging & Polish (Week 8)**
+- **Phase 3: Testing, Debugging & Polish (Week 5)**
 *   **Objective:** Ensure the application is stable, performant, and user-friendly.
 *   **Key Activities:**
     1.  **Unit & Integration Testing:** Write tests for critical business logic (e.g., cart calculations, data parsing).
-    2.  **User Acceptance Testing (UAT):** Onboard at least 100 test users (as per KPI) and collect feedback on usability and bugs.
-    3.  **Performance Optimization:** Profile the app to ensure it meets the **<2s response time** KPI.
-    4.  **Bug Bash:** The entire team tests the app intensively to find and fix crashes and UI glitches.
-    5.  **Final Review:** Conduct a final review of all code and user flows.
-*   **Deliverables:** Test Report, Bug Fix Log, Performance Profile Report, Polished APK.
+    2.  **UI Testing:** Perform automated and manual UI tests to validate screens, navigation, and layout consistency.
+    3.  **Bug Bash:** The entire team tests the app intensively to find and fix crashes and UI glitches.
+    4.  **Final Review:** Conduct a final review of all code and user flows.
+*   **Deliverables:** Test Report, Bug Fix Log, Polished APK.
 
-- **Phase 5: Launch & Presentation (Week 9)**
+- **Phase 4: Launch & Presentation (Week 6)**
 *   **Objective:** Showcase the completed project.
 *   **Key Activities:**
-    1.  **Prepare Final Presentation:** Create slides demonstrating the app's features, architecture, and how it meets the KPIs.
+    1.  **Prepare Final Presentation:** Create slides demonstrating the app's features, architecture.
     2.  **Compile Complementary Products:** Gather all final assets (poster, demo video, GitHub repository link).
     3.  **Final Presentation:** Present the project to the instructor and peers.
 *   **Deliverables:** Final Presentation Slides, Demo Video, Live Demo, Completed GitHub Repository.  
@@ -89,56 +72,10 @@ An Android e-Commerce application built using Jetpack Compose that enables users
 • Frontend UI with Jetpack Compose (all screens as assigned)  
 • Authentication using Firebase (Hossam)  
 • Network calls via Retrofit to DummyJSON API (Yousseif Mohamed)  
-• Product detail, cart & wishlist modules (Yousseif Alaa)  
-• Settings, profile, and wishlist management (Essam)  
-• Initial landing, password recovery, and profile editing (Kirolos)  
+• Product detail, cart (Yousseif Alaa)  
+• Settings, wishlist (Essam)  
+• Initial landing, password recovery, and profile (Kirolos)  
 
-### KPIs (Key Performance Indicators) – Metrics for project success  
-**A. Product & User Engagement KPIs**
-
-1.  **User Adoption & Activation Rate:**
-    *   **Definition:** The number of users who successfully register and log into the app.
-    *   **Measurement:** Tracked via Firebase Analytics and Authentication logs.
-    *   **Target:** At least **100 unique test users** onboarded during the testing phase (UAT).
-
-2.  **User Conversion Rate:**
-    *   **Definition:** The percentage of users who start and successfully complete the checkout process.
-    *   **Measurement:** Analyze the user flow from adding an item to the cart to completing an order. Can be tracked with custom events in Firebase.
-    *   **Target:** **>15%** of users who add an item to their cart complete the checkout flow.
-
-3.  **Feature Engagement:**
-    *   **Definition:** Measures how actively users interact with key features like the Wishlist and Search.
-    *   **Measurement:** Average number of products added to wishlist per user; number of searches performed per session (Firebase Analytics).
-    *   **Target:** **>50%** of active users use the Wishlist feature; **>70%** use the Search function.
-
-**B. Technical Performance KPIs**
-
-1.  **App Responsiveness (Screen Transition Time):**
-    *   **Definition:** The average time taken for the app to load and display a new screen after user interaction.
-    *   **Measurement:** Use Android Profiler and custom logging to measure screen render times.
-    *   **Target:** Average screen transition time **< 2 seconds** on a mid-range device.
-
-2.  **API Response Time:**
-    *   **Definition:** The time taken to receive a response from the DummyJSON API after a network request is made.
-    *   **Measurement:** Logged via Retrofit interceptors.
-    *   **Target:** Critical API calls (e.g., fetching products, user login) respond in **< 1.5 seconds** on average.
-
-3.  **App Stability (Crash-Free Rate):**
-    *   **Definition:** The percentage of crash-free user sessions.
-    *   **Measurement:** Monitored via Firebase Crashlytics.
-    *   **Target:** **> 99%** crash-free sessions during the testing phase and final demo.
-
-**C. Business & Project Success KPIs**
-
-1.  **Project Completion Rate:**
-    *   **Definition:** The percentage of planned features (from Phase 1) successfully implemented and functioning in the final build.
-    *   **Measurement:** Checklist against the initial Requirement Specification.
-    *   **Target:** **100%** of MVP features completed and functional.
-
-2.  **Code Quality:**
-    *   **Definition:** Maintainability and cleanliness of the codebase.
-    *   **Measurement:** Peer code reviews, adherence to a shared style guide, and absence of major lint warnings.
-    *   **Target:** All code is reviewed and merged without major style or architectural issues.
 ---
 
 ## Instructor  
@@ -148,5 +85,4 @@ Ahmed Atef
 
 ## Project Files  
 You can find the full project files here:  
-👉 [GitHub Repository](https://github.com/Srmortal/ecommerce-app)  
-
+👉 [GitHub Repository](https://github.com/Srmortal/ecommerce-app)
