@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.compose.runtime.livedata)
+    implementation(libs.androidx.navigation.testing)
     testImplementation(libs.junit)
     implementation("com.google.accompanist:accompanist-navigation-animation:0.33.2-alpha")
     implementation("androidx.core:core-splashscreen:1.0.0")

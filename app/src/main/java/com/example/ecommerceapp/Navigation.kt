@@ -44,6 +44,7 @@ import com.example.ecommerceapp.data.NavItem
 import com.example.ecommerceapp.presentation.Home
 import com.example.ecommerceapp.presentation.SettingsScreen
 import com.example.ecommerceapp.presentation.SignUp
+import com.example.ecommerceapp.presentation.WishlistScreen
 import com.example.ecommerceapp.ui.theme.AppBar
 import com.example.ecommerceapp.ui.theme.BlueLogo1
 import com.google.firebase.auth.FirebaseAuth
@@ -65,7 +66,7 @@ fun AppNavigation() {
             }
         },
         bottomBar = {
-            if (currentRoute == "home" || currentRoute == "settings") {
+            if (currentRoute == "home" || currentRoute == "settings" || currentRoute == "wishlist") {
                 BottomBar(navController, currentRoute)
             }
         },
@@ -84,6 +85,9 @@ fun AppNavigation() {
                     onDarkModeToggle = { isDarkTheme = it },
                     navController = navController
                 )
+            }
+            composable("wishlist") {
+                WishlistScreen(navController = navController)
             }
         }
     }
@@ -116,13 +120,14 @@ fun BottomBar(navController: NavController, currentRoute: String?) {
         NavItem(
             label = "Favourites",
             icon = Icons.Outlined.Favorite,
-            onClick = {}
+            onClick = { navController.navigate("wishlist") }
         ),
     )
 
     val selectedIndex = when (currentRoute) {
         "home" -> 0
         "settings" -> 3
+        "wishlist" -> 4
         else -> 0
     }
 
