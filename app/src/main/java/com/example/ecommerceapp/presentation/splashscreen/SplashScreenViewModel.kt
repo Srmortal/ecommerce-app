@@ -1,8 +1,8 @@
 package com.example.ecommerceapp.presentation.splashscreen
 
-import DataStoreRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ecommerceapp.data.local.DataStoreRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

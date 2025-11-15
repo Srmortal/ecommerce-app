@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+   // id ("com.android.application")
     id("com.google.gms.google-services")
 }
 
@@ -41,6 +42,11 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.material3:material3:current_version")
+    implementation("androidx.compose.ui:ui-tooling:current_version")
+    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -50,8 +56,11 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.compose.foundation.layout)
     testImplementation(libs.junit)
-    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("io.coil-kt:coil-compose:2.6.0")
