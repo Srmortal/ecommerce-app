@@ -44,7 +44,6 @@ import com.example.ecommerceapp.data.NavItem
 import com.example.ecommerceapp.presentation.Home
 import com.example.ecommerceapp.presentation.SettingsScreen
 import com.example.ecommerceapp.presentation.SignUp
-import com.example.ecommerceapp.presentation.signin.ForgetPassword
 import com.example.ecommerceapp.ui.theme.AppBar
 import com.example.ecommerceapp.ui.theme.BlueLogo1
 import com.google.firebase.auth.FirebaseAuth
@@ -78,7 +77,6 @@ fun AppNavigation() {
         ) {
             composable("signup") { SignUp(navController, innerPadding) }
             composable("signin") { SignIn(navController, innerPadding) }
-            composable("forgetpassword") { ForgetPassword(navController, innerPadding) }
             composable("home") { Home() }
             composable("settings") { 
                 SettingsScreen(

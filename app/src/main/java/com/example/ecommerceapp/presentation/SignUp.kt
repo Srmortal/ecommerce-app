@@ -29,8 +29,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun SignUp(navController: NavController, innerPadding: PaddingValues) {
     val auth = FirebaseAuth.getInstance()
-    val coroutineScope = rememberCoroutineScope()
-    val focusManager = LocalFocusManager.current
 
     val usernameFocus = remember { FocusRequester() }
     val passwordFocus = remember { FocusRequester() }
@@ -128,7 +126,7 @@ fun SignUp(navController: NavController, innerPadding: PaddingValues) {
             icon = R.drawable.key,
             isPassword = true,
             imeAction = ImeAction.Done,
-            onNext = { focusManager.clearFocus() },
+            onNext = {  },
             modifier = Modifier.focusRequester(repeatPasswordFocus)
         )
         if (repeatPasswordError.isNotEmpty()) ErrorText(repeatPasswordError)
@@ -165,7 +163,6 @@ fun SignUp(navController: NavController, innerPadding: PaddingValues) {
                 if (hasError) return@Button
 
                 isLoading = true
-                coroutineScope.launch {
                     auth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener { task ->
                             isLoading = false
@@ -185,7 +182,7 @@ fun SignUp(navController: NavController, innerPadding: PaddingValues) {
                                     ?: "Registration failed"
                             }
                         }
-                }
+
             },
             colors = ButtonColors(
                 contentColor = Color.Black,

@@ -166,73 +166,13 @@ fun SettingsScreen(
 @Composable
 fun SettingsScreenPreview() {
     EcommerceAppTheme(darkTheme = false) {
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(32.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp),
-                shape = RoundedCornerShape(28.dp),
-                color = MaterialTheme.colorScheme.surface,
-                tonalElevation = 6.dp,
-                shadowElevation = 6.dp
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 24.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Surface(
-                            modifier = Modifier.size(44.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            color = MaterialTheme.colorScheme.primary,
-                            tonalElevation = 0.dp
-                        ) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Rounded.NightsStay,
-                                    contentDescription = "Night Mode",
-                                    tint = MaterialTheme.colorScheme.onPrimary
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text(
-                            text = "Night Mode",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                    Switch(
-                        checked = false,
-                        onCheckedChange = {},
-                        colors = SwitchDefaults.colors(
-                            checkedTrackColor = MaterialTheme.colorScheme.surface,
-                            checkedThumbColor = MaterialTheme.colorScheme.error,
-                            checkedBorderColor = MaterialTheme.colorScheme.error.copy(alpha = 0.3f),
-                            uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                            uncheckedThumbColor = MaterialTheme.colorScheme.surface,
-                            uncheckedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)
-                        )
-                    )
-                }
-            }
-        }
+        SettingsScreen(
+            isDarkMode = false,
+            onDarkModeToggle = {},
+            navController = androidx.navigation.testing.TestNavHostController(
+                androidx.compose.ui.platform.LocalContext.current
+            )
+        )
     }
 }
 

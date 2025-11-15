@@ -4,7 +4,6 @@ import ErrorText
 import InfoText
 import InputField
 import Logo
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -97,8 +96,6 @@ fun SignIn(navController: NavController, innerPadding: PaddingValues) {
 
         TextButton(
             onClick = {
-                Log.d("LoginClicked", "SignIn: ")
-
                 if (email.isBlank() || password.isBlank()) {
                     errorMessage = "Email and Password cannot be empty"
                     return@TextButton
@@ -141,7 +138,7 @@ fun SignIn(navController: NavController, innerPadding: PaddingValues) {
 
         TextButton(
             {
-                Log.d("ForgetClicked", "SignIn: ")
+//                navController.navigate("home")
             },
         ) {
             Text(
@@ -151,7 +148,6 @@ fun SignIn(navController: NavController, innerPadding: PaddingValues) {
                     detectTapGestures(
                         onPress = {
                             isPressed = true
-                            navController.navigate("forgetpassword")
                             try {
                                 awaitRelease()
                             } finally {

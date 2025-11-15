@@ -69,8 +69,6 @@ fun AppSplashScreen(onFinished: () -> Unit) {
         )
         AnimatedRoadWithTruck()
     }
-
-
 }
 
 @Composable
