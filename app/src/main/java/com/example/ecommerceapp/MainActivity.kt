@@ -33,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,10 +51,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.ui.platform.LocalContext
+import com.example.ecommerceapp.data.local.DataStoreRepository
 import com.example.ecommerceapp.presentation.SettingsScreen
 import com.example.ecommerceapp.presentation.SignUp
 import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 
 @OptIn(ExperimentalAnimationApi::class)
 class MainActivity : ComponentActivity() {
@@ -63,9 +67,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            val context = LocalContext.current
+            val dataStoreRepository = remember { DataStoreRepository(context) }
             val systemDarkTheme = isSystemInDarkTheme()
-            var isDarkTheme by remember { mutableStateOf(systemDarkTheme) }
-            EcommerceAppTheme(darkTheme = isDarkTheme) {
+            // Observe dark mode state from DataStore
+            val darkModeState by dataStoreRepository.readDarkModeState().collectAsState(initial = systemDarkTheme)
+            
+            EcommerceAppTheme(darkTheme = darkModeState) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

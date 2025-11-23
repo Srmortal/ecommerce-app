@@ -44,6 +44,7 @@ import com.example.ecommerceapp.data.NavItem
 import com.example.ecommerceapp.presentation.Home
 import com.example.ecommerceapp.presentation.SettingsScreen
 import com.example.ecommerceapp.presentation.SignUp
+import com.example.ecommerceapp.presentation.WishlistScreen
 import com.example.ecommerceapp.ui.theme.AppBar
 import com.example.ecommerceapp.ui.theme.BlueLogo1
 import com.google.firebase.auth.FirebaseAuth
@@ -60,12 +61,15 @@ fun AppNavigation() {
 
     Scaffold(
         topBar = {
-            if (currentRoute == "home" || currentRoute == "settings") {
-                AppBar()
+            if (currentRoute == "home" || currentRoute == "settings" || currentRoute == "wishlist") {
+                // AppBar is handled in individual screens for wishlist
+                if (currentRoute != "wishlist") {
+                    AppBar()
+                }
             }
         },
         bottomBar = {
-            if (currentRoute == "home" || currentRoute == "settings") {
+            if (currentRoute == "home" || currentRoute == "settings" || currentRoute == "wishlist") {
                 BottomBar(navController, currentRoute)
             }
         },
@@ -79,11 +83,10 @@ fun AppNavigation() {
             composable("signin") { SignIn(navController, innerPadding) }
             composable("home") { Home() }
             composable("settings") { 
-                SettingsScreen(
-                    isDarkMode = isDarkTheme,
-                    onDarkModeToggle = { isDarkTheme = it },
-                    navController = navController
-                )
+                SettingsScreen(navController = navController)
+            }
+            composable("wishlist") {
+                WishlistScreen(navController = navController)
             }
         }
     }
@@ -114,15 +117,16 @@ fun BottomBar(navController: NavController, currentRoute: String?) {
             onClick = { navController.navigate("settings") }
         ),
         NavItem(
-            label = "Favourites",
+            label = "Pages",
             icon = Icons.Outlined.Favorite,
-            onClick = {}
+            onClick = { navController.navigate("wishlist") }
         ),
     )
     
     val selectedIndex = when (currentRoute) {
         "home" -> 0
         "settings" -> 3
+        "wishlist" -> 4
         else -> 0
     }
     

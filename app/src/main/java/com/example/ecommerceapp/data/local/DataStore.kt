@@ -17,6 +17,7 @@ class DataStoreRepository(context: Context) {
 
     private object PreferencesKey {
         val onBoardingKey = booleanPreferencesKey(name = "on_boarding_completed")
+        val darkModeKey = booleanPreferencesKey(name = "dark_mode_enabled")
     }
 
     private val dataStore = context.dataStore
@@ -39,6 +40,26 @@ class DataStoreRepository(context: Context) {
             .map { preferences ->
                 val onBoardingState = preferences[PreferencesKey.onBoardingKey] ?: false
                 onBoardingState
+            }
+    }
+
+    suspend fun saveDarkModeState(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKey.darkModeKey] = enabled
+        }
+    }
+
+    fun readDarkModeState(): Flow<Boolean> {
+        return dataStore.data
+            .catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preferences ->
+                preferences[PreferencesKey.darkModeKey] ?: false
             }
     }
 }

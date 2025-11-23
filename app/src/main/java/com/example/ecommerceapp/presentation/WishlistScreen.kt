@@ -15,14 +15,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.GridView
-import androidx.compose.material.icons.outlined.List
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -35,9 +36,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,16 +46,21 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.testing.TestNavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.ecommerceapp.data.models.Product
 import com.example.ecommerceapp.data.viewmodels.WishlistViewModel
 import com.example.ecommerceapp.ui.theme.AppBar
 import com.example.ecommerceapp.ui.theme.BlueLogo1
+import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
+import com.example.ecommerceapp.ui.theme.RoyalBlue
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
 
 @Composable
 fun WishlistScreen(
@@ -75,7 +78,7 @@ fun WishlistScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(BlueLogo1)
     ) {
         Surface(
             modifier = Modifier.fillMaxWidth(),
@@ -102,7 +105,7 @@ fun WishlistScreen(
                     color = Color.White
                 )
                 
-                IconButton(onClick = {  }) {
+                IconButton(onClick = { }) {
                     Icon(
                         imageVector = Icons.Default.Menu,
                         contentDescription = "Menu",
@@ -112,104 +115,160 @@ fun WishlistScreen(
             }
         }
 
-        Surface(
+        // Content
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            color = BlueLogo1
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                Text(
+                    text = "Wishlist Items",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Color.White)
+                }
+            } else if (error != null) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Wishlist Items",
-                        style = MaterialTheme.typography.titleMedium,
+                        text = error ?: "Error loading wishlist",
                         color = Color.White
                     )
-
-                    Row {
-                        Icon(
-                            imageVector = Icons.Outlined.GridView,
-                            contentDescription = "Grid View",
-                            tint = Color.White.copy(alpha = 0.6f),
-                            modifier = Modifier
-                                .size(24.dp)
-                                .padding(end = 8.dp)
-                        )
-                        Icon(
-                            imageVector = Icons.Outlined.List,
-                            contentDescription = "List View",
-                            tint = Color.White,
-                            modifier = Modifier.size(24.dp)
+                }
+            } else if (wishlistProducts.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Your wishlist is empty",
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(wishlistProducts) { product ->
+                        WishlistItemCard(
+                            product = product,
+                            onDelete = {
+                                viewModel.removeFromWishlist(product.id)
+                            }
                         )
                     }
                 }
+            }
 
+            // Add all items to cart button
+            if (wishlistProducts.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(16.dp))
-
-                if (isLoading) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(color = Color.White)
-                    }
-                } else if (error != null) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = error ?: "Error loading wishlist",
-                            color = Color.White
-                        )
-                    }
-                } else if (wishlistProducts.isEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Your wishlist is empty",
-                            color = Color.White,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                } else {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(wishlistProducts) { product ->
-                            WishlistItemCard(
-                                product = product,
-                                onDelete = {
-                                    viewModel.removeFromWishlist(product.id)
-                                }
-                            )
-                        }
-                    }
+                Button(
+                    onClick = {
+                        addAllToCart(wishlistProducts)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = RoyalBlue
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "Add to cart",
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Add all items to cart",
+                        style = MaterialTheme.typography.displayMedium,
+                        color = Color.White
+                    )
                 }
             }
         }
     }
 }
 
+fun addAllToCart(products: List<Product>) {
+    val auth = FirebaseAuth.getInstance()
+    val currentUser = auth.currentUser
+    
+    if (currentUser == null) return
+    
+    val firestore = Firebase.firestore
+    
+    // Get or create user's cart
+    firestore.collection("carts")
+        .whereEqualTo("userId", currentUser.uid)
+        .limit(1)
+        .get()
+        .addOnSuccessListener { querySnapshot ->
+            if (querySnapshot.isEmpty) {
+                // Create new cart
+                val cartData = hashMapOf(
+                    "userId" to currentUser.uid,
+                    "items" to products.map { product ->
+                        hashMapOf(
+                            "productId" to product.id,
+                            "quantity" to 1,
+                            "price" to product.price
+                        )
+                    }
+                )
+                firestore.collection("carts").add(cartData)
+            } else {
+                // Update existing cart
+                val cartDoc = querySnapshot.documents.first()
+                val existingItems = cartDoc.get("items") as? List<Map<String, Any>> ?: emptyList()
+                val newItems = products.map { product ->
+                    hashMapOf(
+                        "productId" to product.id,
+                        "quantity" to 1,
+                        "price" to product.price
+                    )
+                }
+                val allItems = existingItems + newItems
+                cartDoc.reference.update("items", allItems)
+            }
+        }
+        .addOnFailureListener { e ->
+            // Handle error
+            e.printStackTrace()
+        }
+}
+
 @Composable
 fun WishlistItemCard(
-    product: com.example.ecommerceapp.data.models.Product,
+    product: Product,
     onDelete: () -> Unit
 ) {
     Card(
@@ -227,12 +286,12 @@ fun WishlistItemCard(
                 .fillMaxSize()
                 .padding(12.dp)
         ) {
+            // Product Image with notification dot
             Box(
                 modifier = Modifier
-                    .width(120.dp)
+                    .width(80.dp)
                     .height(116.dp)
             ) {
-                // Product Image
                 AsyncImage(
                     model = if (product.images.isNotEmpty()) {
                         product.images[0]
@@ -245,22 +304,25 @@ fun WishlistItemCard(
                         .fillMaxSize()
                         .clip(RoundedCornerShape(12.dp))
                 )
-
-                IconButton(
-                    onClick = onDelete,
+                
+                // Notification dot
+                Box(
                     modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .size(32.dp)
+                        .align(Alignment.TopEnd)
+                        .size(12.dp)
                         .background(
-                            color = Color.Red.copy(alpha = 0.8f),
-                            shape = RoundedCornerShape(8.dp)
+                            color = Color.Red,
+                            shape = CircleShape
                         )
+                        .padding(2.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Remove from wishlist",
-                        tint = Color.White,
-                        modifier = Modifier.size(18.dp)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                color = Color.White,
+                                shape = CircleShape
+                            )
                     )
                 }
             }
@@ -282,7 +344,13 @@ fun WishlistItemCard(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                val originalPrice = product.price / (1 - product.discountPercentage / 100)
+                // Price with strikethrough
+                val originalPrice = if (product.discountPercentage > 0) {
+                    product.price / (1 - product.discountPercentage / 100)
+                } else {
+                    product.price
+                }
+                
                 val priceText = buildAnnotatedString {
                     withStyle(
                         style = SpanStyle(
@@ -292,20 +360,23 @@ fun WishlistItemCard(
                     ) {
                         append("$${String.format("%.2f", product.price)}")
                     }
-                    append("  ")
-                    withStyle(
-                        style = SpanStyle(
-                            color = Color.Red,
-                            textDecoration = TextDecoration.LineThrough
-                        )
-                    ) {
-                        append("$${String.format("%.2f", originalPrice)}")
+                    if (product.discountPercentage > 0) {
+                        append("  ")
+                        withStyle(
+                            style = SpanStyle(
+                                color = Color.Gray,
+                                textDecoration = TextDecoration.LineThrough
+                            )
+                        ) {
+                            append("$${String.format("%.2f", originalPrice)}")
+                        }
                     }
                 }
                 Text(text = priceText)
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // Rating
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -316,8 +387,10 @@ fun WishlistItemCard(
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
+                    // Calculate review count from rating (approximation)
+                    val reviewCount = (product.rating * 10).toInt().coerceAtLeast(1)
                     Text(
-                        text = "${String.format("%.2f", product.rating)} (${(product.rating * 10).toInt()} reviews)",
+                        text = "${String.format("%.2f", product.rating)} ($reviewCount reviews)",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
@@ -330,8 +403,9 @@ fun WishlistItemCard(
 @Preview(showBackground = true)
 @Composable
 fun WishlistScreenPreview() {
-    WishlistScreen(
-        navController = TestNavHostController(LocalContext.current)
-    )
+    EcommerceAppTheme(darkTheme = false) {
+        WishlistScreen(
+            navController = rememberNavController()
+        )
+    }
 }
-
