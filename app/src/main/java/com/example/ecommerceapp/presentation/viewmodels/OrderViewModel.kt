@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.data.viewmodels
+package com.example.ecommerceapp.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import com.example.ecommerceapp.data.models.Order

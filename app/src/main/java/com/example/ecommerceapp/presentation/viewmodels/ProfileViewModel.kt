@@ -1,9 +1,8 @@
-package com.example.ecommerceapp.data.viewmodels
+package com.example.ecommerceapp.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import com.example.ecommerceapp.data.models.User
-import com.example.ecommerceapp.data.viewmodels.ProductViewModel.PasswordChangeResult
-import com.example.ecommerceapp.presentation.ShippingOption
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
@@ -12,7 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.tasks.await
-import java.math.BigDecimal
 
 class ProfileViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
@@ -106,7 +104,7 @@ class ProfileViewModel : ViewModel() {
             // 4. Handle specific Firebase exceptions
             when (e) {
                 is FirebaseAuthRecentLoginRequiredException -> PasswordChangeResult.REQUIRES_RECENT_LOGIN
-                is com.google.firebase.FirebaseException -> {
+                is FirebaseException -> {
                     // Check for invalid credentials (wrong current password)
                     if (e.message?.contains("INVALID_CREDENTIAL") == true) {
                         PasswordChangeResult.INVALID_CREDENTIAL

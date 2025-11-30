@@ -10,8 +10,8 @@ import retrofit2.http.Query
 interface ApiService {
     @GET("products")
     suspend fun getProducts(
-        @Query("limit") limit: Int,
-        @Query("skip") skip: Int
+        @Query("limit") limit: Int=10,
+        @Query("skip") skip: Int=5
     ): ProductList
 
     @GET("products/category-list")
@@ -20,8 +20,8 @@ interface ApiService {
     @GET("products/category/{category}")
     suspend fun getProductsByCategory(
         @Path("category") category: String,
-        @Query("limit") limit: Int,
-        @Query("skip") skip: Int
+        @Query("limit") limit: Int=10,
+        @Query("skip") skip: Int=5
     ): ProductList
     @GET("products/{id}")
     suspend fun getProductDetails(@Path("id") id: Int): Product

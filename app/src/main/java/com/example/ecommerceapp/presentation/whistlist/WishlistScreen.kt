@@ -3,7 +3,6 @@ package com.example.ecommerceapp.presentation.whistlist
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -28,11 +27,10 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.ecommerceapp.data.Constants
 import com.example.ecommerceapp.data.models.Product
-import com.example.ecommerceapp.data.viewmodels.CartViewModel
+import com.example.ecommerceapp.presentation.viewmodels.CartViewModel
 import com.example.ecommerceapp.data.viewmodels.ProductViewModel
 import com.example.ecommerceapp.ui.theme.AppBar
 import com.example.ecommerceapp.ui.theme.RoyalBlue
-import kotlinx.coroutines.launch
 
 @Composable
 fun WishlistScreen(

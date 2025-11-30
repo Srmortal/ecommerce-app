@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.ecommerceapp.data.models.User
-import com.example.ecommerceapp.data.viewmodels.ProfileViewModel
+import com.example.ecommerceapp.presentation.viewmodels.ProfileViewModel
 
 val LightPurpleCard = Color(0xFF333B65)
 val LightBlue = Color(0xFF0D5CD1)

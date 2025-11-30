@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.ecommerceapp.data.viewmodels.ProfileViewModel
+import com.example.ecommerceapp.presentation.viewmodels.ProfileViewModel
 import kotlinx.coroutines.launch
 
 val DarkBlueBackground = Color(0xFF0C153B)
