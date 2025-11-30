@@ -33,12 +33,9 @@ enum class PaymentMethod(private val method: Pair<String, Int>) {
 }
 
 data class Order(
-    val id: Int,
-    val userId: Int,
-    val cartId: Int,
     val paymentMethod: PaymentMethod,
     val orderDate: Date,
     val status: OrderStatus,
-    val deliveryAddress: String,
-    val fireId: String
+    val deliveryAddress: String?,
+    val fireId: String?
 )

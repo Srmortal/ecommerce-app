@@ -1,4 +1,4 @@
-package com.example.ecommerceapp
+package com.example.ecommerceapp.ui.theme
 
 import Logo
 import androidx.compose.animation.core.Animatable
@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.ecommerceapp.R
 import kotlinx.coroutines.delay
 
 

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +32,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.ecommerceapp.data.Constants
@@ -46,8 +44,6 @@ fun SignIn(navController: NavController, innerPadding: PaddingValues) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
-    var isPressed by remember { mutableStateOf(false) }
-    LocalContext.current
 
     val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -104,9 +100,17 @@ fun SignIn(navController: NavController, innerPadding: PaddingValues) {
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            errorMessage = ""
-                            navController.navigate("home") {
-                                popUpTo(0) { inclusive = true }
+                            val user = auth.currentUser
+
+                            if (user != null && user.isEmailVerified) {
+                                errorMessage = ""
+                                navController.navigate("home") {
+                                    popUpTo(0) { inclusive = true }
+                                }
+                            } else {
+                                errorMessage = "Please verify your email address before logging in."
+
+                                auth.signOut()
                             }
                         } else {
                             when (task.exception) {
@@ -137,25 +141,13 @@ fun SignIn(navController: NavController, innerPadding: PaddingValues) {
         }
 
         TextButton(
-            {
-//                navController.navigate("home")
+            onClick = {
+                navController.navigate("forget_password")
             },
         ) {
             Text(
                 "Forget Password?",
-                color = if (isPressed) MaterialTheme.colorScheme.secondary else Color.White,
-                modifier = Modifier.pointerInput(Unit) {
-                    detectTapGestures(
-                        onPress = {
-                            isPressed = true
-                            try {
-                                awaitRelease()
-                            } finally {
-                                isPressed = false
-                            }
-                        },
-                    )
-                },
+                color = Color.White,
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
                 textDecoration = TextDecoration.Underline

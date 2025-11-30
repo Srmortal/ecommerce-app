@@ -6,16 +6,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommerceapp.data.models.Category
+import com.example.ecommerceapp.data.models.Product
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class CategoryViewModel: ViewModel() {
+class CategoryViewModel : ViewModel() {
     private val _categories = MutableLiveData<List<Category>>()
     val categories: LiveData<List<Category>> = _categories
 
-    fun fetchCategories(){
+    fun fetchCategories() {
         viewModelScope.launch {
             try {
                 // Fetch categories directly from Firestore
@@ -25,7 +28,10 @@ class CategoryViewModel: ViewModel() {
 
                 // Post the fetched list to the LiveData
                 _categories.postValue(fetchedCategories) // Use postValue for background threads
-                Log.d("CategoryViewModel", "Successfully fetched ${fetchedCategories.size} categories.")
+                Log.d(
+                    "CategoryViewModel",
+                    "Successfully fetched ${fetchedCategories.size} categories."
+                )
 
             } catch (e: Exception) {
                 // Handle any errors, e.g., network issues or permissions
@@ -34,4 +40,6 @@ class CategoryViewModel: ViewModel() {
             }
         }
     }
+
+
 }

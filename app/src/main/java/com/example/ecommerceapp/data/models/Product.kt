@@ -10,6 +10,7 @@ data class Product(
     val brand: String="",
     val rating: Double=0.0,
     val stock: Int=0,
+    val reviews: List<Review> = emptyList(),
     val thumbnail: String="",
     val discountPercentage: Double=0.0,
     var fireId: String=""

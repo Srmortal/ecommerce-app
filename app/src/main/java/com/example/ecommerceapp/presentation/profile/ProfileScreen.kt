@@ -1,86 +1,127 @@
 package com.example.ecommerceapp.presentation.profile
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ecommerceapp.R
-import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.ecommerceapp.data.models.User
+import com.example.ecommerceapp.data.viewmodels.ProfileViewModel
+
+val LightPurpleCard = Color(0xFF333B65)
+val LightBlue = Color(0xFF0D5CD1)
 
 @Composable
-fun ProfileScreen() {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color(0xFF2A2C3E)
+fun ProfileScreen(
+    navController: NavController,
+    innerPadding: PaddingValues,
+    viewModel: ProfileViewModel = viewModel()
+) {
+    val currentUser by viewModel.currentUser.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize().background(color = DarkBlueBackground)
+            .padding(innerPadding)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            UserInfoRow(iconRes = R.drawable.at, label = "Username", value = "@designing-world")
-            UserInfoRow(iconRes = R.drawable.profile, label = "Full Name", value = "SUHA JANNAT")
-            UserInfoRow(iconRes = R.drawable.baseline_phone_24, label = "Phone", value = "+880 000 111 222")
-            UserInfoRow(iconRes = R.drawable.baseline_email_24, label = "Email", value = "care@example.com")
-            Button(
-                onClick = {  },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF776DFF)),
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-                    .height(48.dp)
-            ) {
-                Text(text = "Edit Profile", color = Color.White, fontSize = 16.sp)
+        Spacer(modifier = Modifier.height(20.dp))
+
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxWidth().height(250.dp), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = WhiteText)
             }
+        } else if (currentUser != null) {
+            ProfileDetailsCard(currentUser!!)
+        } else {
+            Text("User data unavailable.", color = Color.Red, modifier = Modifier.fillMaxWidth())
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
+            onClick = { navController.navigate("edit_profile") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = LightBlue),
+            shape = RoundedCornerShape(12.dp),
+            enabled = !isLoading
+        ) {
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = "Edit Profile",
+                tint = WhiteText,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Edit Profile",
+                color = WhiteText,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
+
 @Composable
-fun UserInfoRow(iconRes: Int, label: String, value: String) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
+fun ProfileDetailsCard(user: User) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = LightPurpleCard)
     ) {
-        Image(
-            painter = painterResource(id = iconRes),
-            contentDescription = null,
-            modifier = Modifier
-                .size(24.dp)
-                .padding(4.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = "$label: ", color = Color.Gray)
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = value, color = Color.White)
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            ProfileDetailRow(Icons.Default.Person, "Full Name", user.username)
+            Divider(color = DarkBlueBackground, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+
+            ProfileDetailRow(Icons.Default.Phone, "Phone", user.phone)
+            Divider(color = DarkBlueBackground, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+
+            ProfileDetailRow(Icons.Default.Email, "Email", user.email)
+            Divider(color = DarkBlueBackground, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+
+            ProfileDetailRow(Icons.Default.LocalShipping, "Shipping:", user.address)
+            Divider(color = DarkBlueBackground, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+
+            ProfileOrdersRow(Icons.Default.Star, "My Orders")
+        }
     }
 }
-@Preview(showBackground = true)
+
 @Composable
-fun PreviewProfileScreen() {
-    EcommerceAppTheme {
-        ProfileScreen()
+fun ProfileDetailRow(icon: ImageVector, label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(imageVector = icon, contentDescription = label, tint = GrayText, modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(text = label, color = GrayText, fontSize = 16.sp, modifier = Modifier.weight(1f))
+        Text(text = value, color = WhiteText, fontSize = 16.sp, fontWeight = FontWeight.Medium)
     }
+}
+
+@Composable
+fun ProfileOrdersRow(icon: ImageVector, label: String) {
+    // ... (No change)
 }

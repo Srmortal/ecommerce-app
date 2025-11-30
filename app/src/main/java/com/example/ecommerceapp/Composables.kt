@@ -54,6 +54,7 @@ fun InputField(
     isPassword: Boolean = false,
     imeAction: ImeAction = ImeAction.Next,
     onNext: (() -> Unit)? = null,
+    keyboardType: KeyboardType = KeyboardType.Text,
     modifier: Modifier
 ) {
 
@@ -61,8 +62,7 @@ fun InputField(
         modifier = Modifier.padding(vertical = 12.dp)
     ) {
 
-        Text(label, style = MaterialTheme.typography.bodyMedium)
-
+        Text(label, style = MaterialTheme.typography.bodyMedium, color = Color.White)
         TextField(
             value = text,
             onValueChange = onTextChange,
@@ -71,7 +71,7 @@ fun InputField(
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 imeAction = imeAction,
-                keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text,
+                keyboardType = keyboardType,
                 capitalization = KeyboardCapitalization.None,
                 autoCorrect = false
             ),
@@ -79,8 +79,8 @@ fun InputField(
                 onNext = { onNext?.invoke() },
                 onDone = { onNext?.invoke() }
             ),
-                    visualTransformation =
-            if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+            visualTransformation =
+                if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
@@ -89,6 +89,8 @@ fun InputField(
                 focusedLeadingIconColor = Color.White,
                 unfocusedLeadingIconColor = Color.White,
                 focusedPlaceholderColor = Color.White,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
                 unfocusedPlaceholderColor = Color.White
             ),
             textStyle = MaterialTheme.typography.bodyMedium,

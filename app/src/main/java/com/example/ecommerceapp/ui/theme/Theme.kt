@@ -37,7 +37,6 @@ private val LightColorScheme = lightColorScheme(
     onBackground = Color(0xFF1F1F2E),
     surface = LightSurface,
     onSurface = Color(0xFF1F1F2E),
-    surfaceVariant = LightBackground,
     outline = RoyalBlue.copy(alpha = 0.2f)
 )
 

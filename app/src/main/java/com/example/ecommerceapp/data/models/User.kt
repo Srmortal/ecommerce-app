@@ -1,11 +1,10 @@
 package com.example.ecommerceapp.data.models
 
+
 data class User(
-    val id: Int,
-    val firstName: String,
-    val lastName: String,
-    val phone: String,
-    val address: String,
-    val image: String,
-    val fireId: String
+    val uid: String = "",
+    val username: String = "N/A",
+    val email: String = "N/A",
+    val phone: String = "N/A",
+    val address: String = "N/A"
 )
