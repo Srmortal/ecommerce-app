@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.presentation.splashscreen
+package com.example.ecommerceapp.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

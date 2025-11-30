@@ -25,7 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.ecommerceapp.data.models.CartItem
-import com.example.ecommerceapp.data.viewmodels.CartViewModel
+import com.example.ecommerceapp.presentation.viewmodels.CartViewModel
 import kotlinx.coroutines.launch
 
 @Composable

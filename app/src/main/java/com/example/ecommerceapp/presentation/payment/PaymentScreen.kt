@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.ecommerceapp.data.models.PaymentMethod
-import com.example.ecommerceapp.data.viewmodels.OrderViewModel
+import com.example.ecommerceapp.presentation.viewmodels.OrderViewModel
 import com.example.ecommerceapp.presentation.profile.HeaderBackground
 import com.example.ecommerceapp.presentation.profile.LightBlue
 import com.google.firebase.auth.FirebaseAuth

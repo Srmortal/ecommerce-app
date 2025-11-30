@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.data.viewmodels
+package com.example.ecommerceapp.presentation.viewmodels
 
 import android.util.Log
 import androidx.compose.material.icons.Icons

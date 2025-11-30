@@ -1,7 +1,6 @@
 package com.example.ecommerceapp.presentation.checkout
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -25,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.ecommerceapp.data.viewmodels.CheckoutViewModel
+import com.example.ecommerceapp.presentation.viewmodels.CheckoutViewModel
 
 val DeepNavy = Color(0xFF1B1B30)
 val CardNavy = Color(0xFF25253E)

@@ -28,8 +28,8 @@ import coil.compose.AsyncImage
 import com.example.ecommerceapp.data.models.Product
 import com.example.ecommerceapp.data.models.Review
 import com.example.ecommerceapp.data.viewmodels.ProductViewModel
-import com.example.ecommerceapp.data.viewmodels.CartViewModel
-import com.example.ecommerceapp.data.viewmodels.SingleProductViewModel
+import com.example.ecommerceapp.presentation.viewmodels.CartViewModel
+import com.example.ecommerceapp.presentation.viewmodels.SingleProductViewModel
 import kotlinx.coroutines.launch
 
 val DarkBackground = Color(0xFF0C153B)

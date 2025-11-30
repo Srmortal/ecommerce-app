@@ -19,7 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.ecommerceapp.data.models.Order
 import com.example.ecommerceapp.data.models.OrderStatus
-import com.example.ecommerceapp.data.viewmodels.OrderViewModel
+import com.example.ecommerceapp.presentation.viewmodels.OrderViewModel
 import com.example.ecommerceapp.presentation.profile.DarkBlueBackground
 import com.example.ecommerceapp.presentation.profile.DarkerInputBackground
 import com.example.ecommerceapp.presentation.profile.GrayText

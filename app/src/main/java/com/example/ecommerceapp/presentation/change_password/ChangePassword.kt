@@ -4,7 +4,6 @@ import com.example.ecommerceapp.presentation.profile.DarkBlueBackground
 import com.example.ecommerceapp.presentation.profile.HeaderBackground
 import com.example.ecommerceapp.presentation.profile.RedError
 import com.example.ecommerceapp.presentation.profile.WhiteText
-import java.time.format.TextStyle
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.ecommerceapp.data.viewmodels.ProfileViewModel
+import com.example.ecommerceapp.presentation.viewmodels.ProfileViewModel
 import com.example.ecommerceapp.presentation.profile.DarkerInputBackground
 import com.example.ecommerceapp.presentation.profile.LightBlue
 import kotlinx.coroutines.launch
