@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.FileNotFoundException
 import java.io.InputStreamReader
 
 class ApiServiceTest {
@@ -28,31 +29,66 @@ class ApiServiceTest {
             .create(ApiService::class.java)
     }
 
-    private fun enqueueMockResponse(fileName: String) {
-        val inputStream = javaClass.classLoader!!.getResourceAsStream(fileName)
-        val source = InputStreamReader(inputStream).readText()
+    /**
+     * Enqueues a mock response from a given JSON string content.
+     * @param content The JSON string to be used as the response body.
+     */
+    private fun enqueueMockResponseFromString(content: String) {
         val mockResponse = MockResponse()
-        mockResponse.setBody(source)
+        mockResponse.setBody(content)
         server.enqueue(mockResponse)
     }
 
     @Test
     fun `getProducts request path is correct`() = runTest {
         // Given
-        enqueueMockResponse("success_products_response.json")
+        val productsJson = """
+            {
+              "products": [],
+              "total": 0,
+              "skip": 0,
+              "limit": 0
+            }
+        """.trimIndent()
+        enqueueMockResponseFromString(productsJson)
 
         // When
         apiService.getProducts()
 
         // Then
         val request = server.takeRequest()
-        assertThat(request.path).isEqualTo("/products")
+        assertThat(request.path).isEqualTo("/products?limit=10&skip=5")
     }
 
     @Test
     fun `getProducts returns correct product list on success`() = runTest {
         // Given
-        enqueueMockResponse("success_products_response.json")
+        val productsJson = """
+            {
+              "products": [
+                {
+                  "id": 1,
+                  "title": "iPhone 9",
+                  "description": "An apple mobile which is nothing like apple",
+                  "price": 549,
+                  "brand": "Apple",
+                  "category": "smartphones"
+                },
+                {
+                  "id": 2,
+                  "title": "iPhone X",
+                  "description": "SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology",
+                  "price": 899,
+                  "brand": "Apple",
+                  "category": "smartphones"
+                }
+              ],
+              "total": 2,
+              "skip": 0,
+              "limit": 2
+            }
+        """.trimIndent()
+        enqueueMockResponseFromString(productsJson)
 
         // When
         val responseBody = apiService.getProducts()
@@ -65,9 +101,16 @@ class ApiServiceTest {
     }
 
     @Test
-    fun `getCategories request path is correct`() = runTest {
+    fun `getCategoryList request path is correct`() = runTest {
         // Given
-        enqueueMockResponse("success_categories_response.json")
+        val categoriesJson = """
+            [
+              "smartphones",
+              "laptops",
+              "fragrances"
+            ]
+        """.trimIndent()
+        enqueueMockResponseFromString(categoriesJson)
 
         // When
         apiService.getCategoryList()
@@ -78,9 +121,16 @@ class ApiServiceTest {
     }
 
     @Test
-    fun `getCategories returns correct list of categories on success`() = runTest {
+    fun `getCategoryList returns correct list of categories on success`() = runTest {
         // Given
-        enqueueMockResponse("success_categories_response.json")
+        val categoriesJson = """
+            [
+              "smartphones",
+              "laptops",
+              "fragrances"
+            ]
+        """.trimIndent()
+        enqueueMockResponseFromString(categoriesJson)
 
         // When
         val responseBody = apiService.getCategoryList()

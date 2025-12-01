@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.ecommerceapp.data.models.PaymentMethod
 import com.example.ecommerceapp.presentation.viewmodels.OrderViewModel
@@ -38,13 +39,11 @@ private val CheckIconColor = Color(0xFF4CAF50)
 @Composable
 fun ChoosePaymentMethodScreen(
     navController: NavController,
-    viewModel: OrderViewModel = remember { OrderViewModel() }
+    viewModel: OrderViewModel = viewModel()
 ) {
 
     val userId by viewModel.userId.collectAsState()
-    val fireId by viewModel.fireId.collectAsState()
-    val cartId by viewModel.cartId.collectAsState()
-    val deliveryAddress by viewModel.deliveryAddress.collectAsState()
+    val deliveryAddress = navController.previousBackStackEntry?.arguments?.getString("address")
     var selectedPaymentMethod by remember { mutableStateOf("Cash On Delivery") }
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
@@ -98,27 +97,22 @@ fun ChoosePaymentMethodScreen(
 
             Button(
                 onClick = {
+                    Log.d("PaymentMethod", "data ${userId} ${deliveryAddress}")
                     val paymentMethodEnum = when (selectedPaymentMethod) {
                         "Cash On Delivery" -> PaymentMethod.CASH_ON_DELIVERY
                         else -> PaymentMethod.CASH_ON_DELIVERY
                     }
-                    if (deliveryAddress != null) {
-                        viewModel.setOrderDetails(
-                            fireId = fireId,
-                            deliveryAddress = deliveryAddress!!
-                        )
-
-                        navController.navigate("payment")
-
-                    }
+                    viewModel.setOrderDetails(
+                        deliveryAddress = deliveryAddress?: "Delivery Address"
+                    )
+                    navController.navigate("payment/${deliveryAddress?: "Delivery Address"}")
                     Log.d(
                         "PaymentMethod",
-                        "data ${userId} ${cartId} ${paymentMethodEnum} ${fireId} ${deliveryAddress}"
+                        "data ${userId} ${paymentMethodEnum} ${deliveryAddress}"
                     )
                     viewModel.confirmOrder(
                         userId = userId,
                         paymentMethod = paymentMethodEnum,
-                        fireId = fireId,
                         deliveryAddress = deliveryAddress,
                         onFailure = { e ->
                             Toast.makeText(context, "Order failed: ${e.message}", Toast.LENGTH_LONG)

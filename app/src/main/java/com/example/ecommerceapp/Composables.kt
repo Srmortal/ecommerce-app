@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -106,6 +107,67 @@ fun InputField(
     }
 }
 
+@Composable
+fun InputField(
+    label: String,
+    text: String,
+    onTextChange: (String) -> Unit,
+    placeholder: String,
+    icon: ImageVector,
+    isPassword: Boolean = false,
+    imeAction: ImeAction = ImeAction.Next,
+    onNext: (() -> Unit)? = null,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    modifier: Modifier
+) {
+
+    Column(
+        modifier = Modifier.padding(vertical = 12.dp)
+    ) {
+
+        Text(label, style = MaterialTheme.typography.bodyMedium, color = Color.White)
+        TextField(
+            value = text,
+            onValueChange = onTextChange,
+            modifier = modifier.fillMaxWidth(),
+            maxLines = 1,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = imeAction,
+                keyboardType = keyboardType,
+                capitalization = KeyboardCapitalization.None,
+                autoCorrect = false
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { onNext?.invoke() },
+                onDone = { onNext?.invoke() }
+            ),
+            visualTransformation =
+                if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White,
+                focusedLeadingIconColor = Color.White,
+                unfocusedLeadingIconColor = Color.White,
+                focusedPlaceholderColor = Color.White,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                unfocusedPlaceholderColor = Color.White
+            ),
+            textStyle = MaterialTheme.typography.bodyMedium,
+            placeholder = { Text(placeholder, color = Color(0xFF8CADEF)) },
+            leadingIcon = {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = label,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+        )
+    }
+}
 
 @Composable
 fun Logo(size: Dp, mainColor: Color, secondColor: Color) {

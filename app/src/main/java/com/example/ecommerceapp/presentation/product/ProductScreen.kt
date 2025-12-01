@@ -27,7 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.ecommerceapp.data.models.Product
 import com.example.ecommerceapp.data.models.Review
-import com.example.ecommerceapp.data.viewmodels.ProductViewModel
+import com.example.ecommerceapp.presentation.viewmodels.ProductViewModel
 import com.example.ecommerceapp.presentation.viewmodels.CartViewModel
 import com.example.ecommerceapp.presentation.viewmodels.SingleProductViewModel
 import kotlinx.coroutines.launch

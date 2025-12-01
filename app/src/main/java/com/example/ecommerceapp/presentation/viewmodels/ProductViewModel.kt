@@ -17,11 +17,14 @@ import com.example.ecommerceapp.data.Remote.RetrofitInstance
 import com.example.ecommerceapp.data.models.Product
 import com.example.ecommerceapp.data.models.User
 import com.example.ecommerceapp.data.repo.FavoritesRepository
+import com.example.ecommerceapp.data.repo.ProductRepository
 import com.example.ecommerceapp.presentation.home.Category
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

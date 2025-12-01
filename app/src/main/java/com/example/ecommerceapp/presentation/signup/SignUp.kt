@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.PhoneCallback
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -158,7 +161,7 @@ fun SignUp(navController: NavController, innerPadding: PaddingValues) {
                 generalMessage = ""
             },
             placeholder = "e.g., +1234567890",
-            icon = R.drawable.mobile,
+            icon = Icons.AutoMirrored.Default.PhoneCallback,
             imeAction = ImeAction.Next,
             keyboardType = KeyboardType.Phone,
             onNext = { addressFocus.requestFocus() },
@@ -175,7 +178,7 @@ fun SignUp(navController: NavController, innerPadding: PaddingValues) {
                 generalMessage = ""
             },
             placeholder = "Street, City, Postal Code",
-            icon = R.drawable.location,
+            icon = Icons.Default.LocationOn,
             imeAction = ImeAction.Done,
             onNext = { /* Done */ },
             modifier = Modifier.focusRequester(addressFocus)

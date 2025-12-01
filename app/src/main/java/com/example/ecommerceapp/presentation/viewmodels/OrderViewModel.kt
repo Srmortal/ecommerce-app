@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.ecommerceapp.data.models.Order
 import com.google.firebase.auth.FirebaseAuth
@@ -19,11 +20,8 @@ class OrderViewModel : ViewModel() {
     private val _fireId = MutableStateFlow<String?>(null)
     val fireId: StateFlow<String?> = _fireId
 
-    private val _userId = MutableStateFlow<Int?>(null)
-    val userId: StateFlow<Int?> = _userId
-
-    private val _cartId = MutableStateFlow<Int?>(null)
-    val cartId: StateFlow<Int?> = _cartId.asStateFlow()
+    private val _userId = MutableStateFlow<String?>(null)
+    val userId: StateFlow<String?> = _userId
 
     private val _deliveryAddress = MutableStateFlow<String?>(null)
     val deliveryAddress: StateFlow<String?> = _deliveryAddress.asStateFlow()
@@ -37,35 +35,38 @@ class OrderViewModel : ViewModel() {
 
     init {
         auth.currentUser?.uid?.let {
-            _fireId.value = it
+            _userId.value = it
         }
     }
 
-    fun setOrderDetails(fireId: String?, deliveryAddress: String) {
-        _fireId.value = deliveryAddress
+    fun setOrderDetails(deliveryAddress: String) {
         _deliveryAddress.value = deliveryAddress
     }
 
     fun confirmOrder(
-        userId: Int?,
+        userId: String?,
         paymentMethod: PaymentMethod,
-        fireId: String?,
         deliveryAddress: String?,
         onFailure: (Exception) -> Unit
     ) {
+        Log.d("OrderViewModel", "confirmOrder called with userId: $userId")
+        Log.d("OrderViewModel", "confirmOrder called with paymentMethod: $paymentMethod")
+        Log.d("OrderViewModel", "confirmOrder called with fireId: $fireId")
+        Log.d("OrderViewModel", "confirmOrder called with deliveryAddress: $deliveryAddress")
+
         val uid = auth.currentUser?.uid
         if (uid == null) {
             onFailure(IllegalStateException("User not authenticated."))
             return
         }
 
-        if (userId == null || cartId == null || deliveryAddress.isNullOrBlank()) {
-            onFailure(IllegalStateException("Missing required order details (userId, cartId, or deliveryAddress)."))
+        if (userId == null || deliveryAddress.isNullOrBlank()) {
+            onFailure(IllegalStateException("Missing required order details (userId or deliveryAddress)."))
             return
         }
 
         val newOrder = Order(
-            fireId = fireId,
+            fireId = null,
             paymentMethod = paymentMethod,
             orderDate = Date(),
             status = OrderStatus.PENDING,
@@ -78,6 +79,9 @@ class OrderViewModel : ViewModel() {
                     .document(uid)
                     .collection("orders")
                     .add(newOrder)
+                    .addOnSuccessListener {
+                        it.update("fireId", it.id)
+                    }
                     .await()
 
 
