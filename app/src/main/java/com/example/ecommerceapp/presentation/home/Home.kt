@@ -64,9 +64,6 @@ fun HomeScreen(
 
     val products by productViewModel.products.collectAsState()
     val isLoading by productViewModel.isLoading.collectAsState()
-    val allUniqueBrands by remember(products) {
-        derivedStateOf { products.map { it.brand }.distinct().sorted() }
-    }
     val favoriteIds by productViewModel.favoriteIds.collectAsState()
     Log.d("FavoriteIds", favoriteIds.toString())
     val dynamicCategories by productViewModel.categories.collectAsState()
@@ -139,7 +136,6 @@ fun HomeScreen(
                             filterState = filterState.copy(selectedBrands = emptySet())
                         }
                     },
-                    allUniqueBrands = allUniqueBrands
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))

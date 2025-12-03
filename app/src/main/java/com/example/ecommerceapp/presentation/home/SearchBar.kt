@@ -52,7 +52,6 @@ fun SearchBar(
     results: List<Product>,
     onResultClick: (Product) -> Unit,
     onFilterChange: (FilterState) -> Unit = {},
-    allUniqueBrands: List<String> = emptyList()
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     var showBrandDialog by remember { mutableStateOf(false) }
@@ -165,7 +164,7 @@ fun SearchBar(
     )
     if (showBrandDialog) {
         BrandFilteringDialog(
-            allBrands = allUniqueBrands,
+            allBrands = results.map { it.brand }.filter { it.isNotBlank() }.toSet().toList(),
             selectedBrands = emptySet(),
             onDismiss = { showBrandDialog = false },
             onApply = {
