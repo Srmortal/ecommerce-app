@@ -65,7 +65,6 @@ fun HomeScreen(
     val products by productViewModel.products.collectAsState()
     val isLoading by productViewModel.isLoading.collectAsState()
     val favoriteIds by productViewModel.favoriteIds.collectAsState()
-    Log.d("FavoriteIds", favoriteIds.toString())
     val dynamicCategories by productViewModel.categories.collectAsState()
 
     val filteredProducts = remember(searchText, products, selectedCategory, filterState) {
@@ -158,7 +157,6 @@ fun HomeScreen(
                         )
                     }
 
-                    // 2. Filter Status Text
                     item(span = { GridItemSpan(4) }) {
                         Column {
                             Spacer(modifier = Modifier.height(10.dp))

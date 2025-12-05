@@ -140,8 +140,6 @@ fun SearchBar(
             }
         },
         content = {
-            // No changes needed here, as the problem was in the container structure.
-            // When active, the SearchBar should now correctly use screen constraints.
             LazyColumn(
                 contentPadding = PaddingValues(12.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)

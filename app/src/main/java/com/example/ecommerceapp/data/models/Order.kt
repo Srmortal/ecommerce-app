@@ -33,9 +33,11 @@ enum class PaymentMethod(private val method: Pair<String, Int>) {
 }
 
 data class Order(
-    val paymentMethod: PaymentMethod,
-    val orderDate: Date,
-    val status: OrderStatus,
-    val deliveryAddress: String?,
-    val fireId: String?
+    // We use var and default values so Firestore can deserialize easily
+    var fireId: String = "",
+    val userId: String = "",
+    val paymentMethod: PaymentMethod = PaymentMethod.CASH_ON_DELIVERY,
+    val orderDate: Date = Date(),
+    val status: OrderStatus = OrderStatus.PENDING,
+    val deliveryAddress: String? = null
 )

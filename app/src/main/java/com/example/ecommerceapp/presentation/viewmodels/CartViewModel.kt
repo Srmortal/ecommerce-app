@@ -74,7 +74,6 @@ class CartViewModel(
 
                 fetchCartItems()
 
-                Log.d("CartViewModel", "Added product ${product.id} with quantity $quantity.")
             } catch (e: Exception) {
                 Log.e("CartViewModel", "Error adding product: ${e.message}")
             }

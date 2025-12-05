@@ -204,14 +204,14 @@ fun CompactProductItem(product: Product, onClick: () -> Unit) {
         IconButton(
             onClick = { },
             modifier = Modifier
-                .size(28.dp)
+//                .size(28.dp)
                 .background(Color(0xFF0D5CD1), RoundedCornerShape(8.dp))
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Add",
                 tint = Color.White,
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(18.dp)
             )
         }
     }

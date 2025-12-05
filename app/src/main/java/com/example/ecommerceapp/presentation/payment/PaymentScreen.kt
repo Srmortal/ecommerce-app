@@ -1,6 +1,5 @@
 package com.example.ecommerceapp.presentation.payment
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,12 +24,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.ecommerceapp.data.models.PaymentMethod
-import com.example.ecommerceapp.presentation.viewmodels.OrderViewModel
-import com.example.ecommerceapp.presentation.profile.HeaderBackground
 import com.example.ecommerceapp.presentation.profile.LightBlue
-import com.google.firebase.auth.FirebaseAuth
+import com.example.ecommerceapp.presentation.viewmodels.OrderViewModel
 
-
+private val HeaderBackground = Color(0xFF1E1B3C)
 private val CardBackground = Color(0xFF242A50)
 private val IconTint = Color(0xFFC7B1E4)
 private val CheckIconColor = Color(0xFF4CAF50)
@@ -41,13 +38,12 @@ fun ChoosePaymentMethodScreen(
     navController: NavController,
     viewModel: OrderViewModel = viewModel()
 ) {
-
     val userId by viewModel.userId.collectAsState()
-    val deliveryAddress = navController.previousBackStackEntry?.arguments?.getString("address")
-    var selectedPaymentMethod by remember { mutableStateOf("Cash On Delivery") }
-    val auth = FirebaseAuth.getInstance()
-    val currentUser = auth.currentUser
+    val isLoading by viewModel.isLoading.collectAsState()
 
+    val deliveryAddress = navController.previousBackStackEntry?.arguments?.getString("address") ?: "Unknown Address"
+
+    var selectedPaymentMethod by remember { mutableStateOf("Cash On Delivery") }
     val context = LocalContext.current
 
     Scaffold(
@@ -97,29 +93,26 @@ fun ChoosePaymentMethodScreen(
 
             Button(
                 onClick = {
-                    Log.d("PaymentMethod", "data ${userId} ${deliveryAddress}")
                     val paymentMethodEnum = when (selectedPaymentMethod) {
                         "Cash On Delivery" -> PaymentMethod.CASH_ON_DELIVERY
                         else -> PaymentMethod.CASH_ON_DELIVERY
                     }
-                    viewModel.setOrderDetails(
-                        deliveryAddress = deliveryAddress?: "Delivery Address"
-                    )
-                    navController.navigate("payment/${deliveryAddress?: "Delivery Address"}")
-                    Log.d(
-                        "PaymentMethod",
-                        "data ${userId} ${paymentMethodEnum} ${deliveryAddress}"
-                    )
+
                     viewModel.confirmOrder(
                         userId = userId,
                         paymentMethod = paymentMethodEnum,
                         deliveryAddress = deliveryAddress,
+                        onSuccess = {
+                            navController.navigate("success_payment") {
+                                popUpTo(0)
+                            }
+                        },
                         onFailure = { e ->
-                            Toast.makeText(context, "Order failed: ${e.message}", Toast.LENGTH_LONG)
-                                .show()
+                            Toast.makeText(context, "Order failed: ${e.message}", Toast.LENGTH_LONG).show()
                         }
                     )
                 },
+                enabled = !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
@@ -127,18 +120,25 @@ fun ChoosePaymentMethodScreen(
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = LightBlue)
             ) {
-                Text(
-                    "Confirm Payment",
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text(
+                        "Confirm Payment",
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
-
 
 @Composable
 fun PaymentMethodCard(

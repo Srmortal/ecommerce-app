@@ -2,122 +2,95 @@ package com.example.ecommerceapp.presentation.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.ecommerceapp.data.models.Order
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import androidx.lifecycle.viewModelScope
+import com.example.ecommerceapp.data.models.Order
 import com.example.ecommerceapp.data.models.OrderStatus
 import com.example.ecommerceapp.data.models.PaymentMethod
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.util.Date
 
 class OrderViewModel : ViewModel() {
-    private val _fireId = MutableStateFlow<String?>(null)
-    val fireId: StateFlow<String?> = _fireId
 
-    private val _userId = MutableStateFlow<String?>(null)
-    val userId: StateFlow<String?> = _userId
-
-    private val _deliveryAddress = MutableStateFlow<String?>(null)
-    val deliveryAddress: StateFlow<String?> = _deliveryAddress.asStateFlow()
-    private val _isOrdersLoading = MutableStateFlow(false)
-    val isOrdersLoading: StateFlow<Boolean> = _isOrdersLoading.asStateFlow()
-    private val _orders = MutableStateFlow<List<Order>>(emptyList())
-    val orders: StateFlow<List<Order>> = _orders.asStateFlow()
-    private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
-    private val usersCollection = firestore.collection("users")
+    private val auth = FirebaseAuth.getInstance()
 
-    init {
-        auth.currentUser?.uid?.let {
-            _userId.value = it
-        }
-    }
+    private val _userId = MutableStateFlow(auth.currentUser?.uid ?: "")
+    val userId = _userId.asStateFlow()
+    private val _orders = MutableStateFlow<List<Order>>(emptyList())
+    val orders = _orders.asStateFlow()
 
-    fun setOrderDetails(deliveryAddress: String) {
-        _deliveryAddress.value = deliveryAddress
-    }
+    private val _isOrdersLoading = MutableStateFlow(false)
+    val isOrdersLoading = _isOrdersLoading.asStateFlow()
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
 
-    fun confirmOrder(
-        userId: String?,
-        paymentMethod: PaymentMethod,
-        deliveryAddress: String?,
-        onFailure: (Exception) -> Unit
-    ) {
-        Log.d("OrderViewModel", "confirmOrder called with userId: $userId")
-        Log.d("OrderViewModel", "confirmOrder called with paymentMethod: $paymentMethod")
-        Log.d("OrderViewModel", "confirmOrder called with fireId: $fireId")
-        Log.d("OrderViewModel", "confirmOrder called with deliveryAddress: $deliveryAddress")
-
-        val uid = auth.currentUser?.uid
-        if (uid == null) {
-            onFailure(IllegalStateException("User not authenticated."))
-            return
-        }
-
-        if (userId == null || deliveryAddress.isNullOrBlank()) {
-            onFailure(IllegalStateException("Missing required order details (userId or deliveryAddress)."))
-            return
-        }
-
-        val newOrder = Order(
-            fireId = null,
-            paymentMethod = paymentMethod,
-            orderDate = Date(),
-            status = OrderStatus.PENDING,
-            deliveryAddress = deliveryAddress,
-        )
-
-        viewModelScope.launch {
-            try {
-                usersCollection
-                    .document(uid)
-                    .collection("orders")
-                    .add(newOrder)
-                    .addOnSuccessListener {
-                        it.update("fireId", it.id)
-                    }
-                    .await()
-
-
-            } catch (e: Exception) {
-                onFailure(e)
-            }
-        }
-    }
 
     fun fetchOrders() {
         val uid = auth.currentUser?.uid
         if (uid == null) {
-            _orders.value = emptyList()
+            Log.e("OrderViewModel", "User not logged in")
             return
         }
-
-        _isOrdersLoading.value = true
         viewModelScope.launch {
-            try {
-                val ordersCollection = usersCollection
-                    .document(uid)
-                    .collection("orders")
-                    .orderBy("orderDate", Query.Direction.DESCENDING)
 
-                val snapshot = ordersCollection.get().await()
-
-                val fetchedOrders = snapshot.documents.mapNotNull { document ->
-                    document.toObject(Order::class.java)?.copy(fireId = document.id)
+            _isOrdersLoading.value = true
+            firestore.collection("users")
+                .document(uid)
+                .collection("orders")
+                .orderBy("orderDate", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener { result ->
+                    val orderList = result.map { document ->
+                        val order = document.toObject(Order::class.java)
+                        order.fireId = document.id
+                        order
+                    }
+                    _orders.value = orderList
+                    _isOrdersLoading.value = false
                 }
+                .addOnFailureListener { e ->
+                    Log.e("OrderViewModel", "Error fetching orders", e)
+                    _isOrdersLoading.value = false
+                }
+        }
+    }
 
-                _orders.value = fetchedOrders
+    fun confirmOrder(
+        userId: String,
+        paymentMethod: PaymentMethod,
+        deliveryAddress: String?,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val orderCollection = firestore.collection("users")
+                    .document(userId)
+                    .collection("orders")
 
+                val newDocRef = orderCollection.document()
+
+                val newOrder = Order(
+                    fireId = newDocRef.id,
+                    userId = userId,
+                    paymentMethod = paymentMethod,
+                    orderDate = Date(),
+                    status = OrderStatus.PENDING,
+                    deliveryAddress = deliveryAddress
+                )
+                newDocRef.set(newOrder)
+                    .addOnSuccessListener { onSuccess() }
+                    .addOnFailureListener { e -> onFailure(e) }
+                _isLoading.value = false
+                onSuccess()
             } catch (e: Exception) {
-                _orders.value = emptyList()
-            } finally {
-                _isOrdersLoading.value = false
+                onFailure(e)
             }
         }
     }

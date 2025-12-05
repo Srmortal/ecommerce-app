@@ -35,11 +35,9 @@ fun OrdersScreen(
     navController: NavController,
     viewModel: OrderViewModel = viewModel()
 ) {
-    // Collect the list of orders and loading state
     val orders by viewModel.orders.collectAsState()
     val isOrdersLoading by viewModel.isOrdersLoading.collectAsState()
 
-    // Trigger data fetch when the screen is first composed
     LaunchedEffect(Unit) {
         viewModel.fetchOrders()
     }
